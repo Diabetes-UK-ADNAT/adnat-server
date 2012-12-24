@@ -1,9 +1,14 @@
 package controllers;
 
-import play.*;
-import play.mvc.*;
-import play.libs.*;
-import org.codehaus.jackson.node.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.BodyParser;                     
+import play.libs.Json;
+import play.libs.Json.*;                        
+import static play.libs.Json.toJson;
+import org.codehaus.jackson.JsonNode;           
+import org.codehaus.jackson.node.ObjectNode;    
+
 import views.html.*;
 
 public class Application extends Controller {
@@ -18,5 +23,22 @@ public class Application extends Controller {
 		result.put("message", "Hello ");
 		return ok(result);
     }
+
+	@BodyParser.Of(play.mvc.BodyParser.Json.class)
+	public static Result sayHello() {
+		JsonNode json = request().body().asJson();
+		ObjectNode result = Json.newObject();
+		String name = json.findPath("name").getTextValue();
+		if(name == null) {
+			result.put("status", "KO");
+			result.put("message", "Missing parameter [name]");
+			return badRequest(result);
+		} else {
+			result.put("status", "OK");
+			result.put("message", "Hello " + name);
+			return ok(result);
+		}
+	}
+
   
 }
