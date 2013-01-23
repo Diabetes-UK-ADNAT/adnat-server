@@ -10,13 +10,22 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;    
 
 import views.html.*;
-
+import models.*;
+import play.Logger;
 public class Application extends Controller {
   
     public static Result index() {
         return ok(index.render("Your new application is ready."));
     }
 	
+    public static Result group() {
+		Group g = new Group();
+		g.groupName = "my group";
+		g.date = new java.util.Date();
+		Group.create(g);
+		Logger.debug(g.groupName); 	
+        return ok("Your new application is ready.");
+	}
     public static Result json() {
 		ObjectNode result = Json.newObject();
 		result.put("status", "OK");
