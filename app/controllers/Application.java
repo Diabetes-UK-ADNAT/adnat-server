@@ -24,6 +24,14 @@ public class Application extends Controller {
 		g.date = new java.util.Date();
 		Group.create(g);
 		Logger.debug(g.groupName); 	
+		Logger.debug(g.toString()); 	
+		
+		Group.all();
+		for(Group g2 : Group.all()) {
+		Logger.debug(g2.toString());
+		}
+		Group.delete("50fef820978e61bbbd3cb95f");
+		//Group.delete(g.id.toString());
         return ok("Your new application is ready.");
 	}
     public static Result json() {
