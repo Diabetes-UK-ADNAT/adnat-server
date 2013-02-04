@@ -6,6 +6,7 @@
 GET     /                       controllers.Application.index()
 GET	/faqs.json		controllers.Application.json()
 GET	/faqs/:id.json		controllers.Application.jsonById(id: String)
+DELETE	/faqs/:id.json		controllers.Application.deleteById(id: String)
 POST	/faqs.json		controllers.Application.createFaq()
 GET	/group			controllers.Application.group()
 POST	/sayHello		controllers.Application.sayHello()

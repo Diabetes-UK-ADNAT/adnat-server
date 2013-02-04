@@ -11,6 +11,7 @@ import play.data.validation.Constraints.Required;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.query.*;
 
 import controllers.MorphiaObject;
 
@@ -18,7 +19,8 @@ import controllers.MorphiaObject;
 public class Faq {
 
     @Id
-    public String id;
+    public ObjectId id;
+    
     @Required
     public String question;
     @Required
@@ -31,16 +33,30 @@ public class Faq {
             return new ArrayList<Faq>();
         }
     }
+    
+    public String getUUID() {
+        return id == null ? null : id.toString();
+    }
 
-    public static void create(Faq faq) {
-        MorphiaObject.datastore.save(faq);
+    public static void save(Faq faq) {
+//        Query q = MorphiaObject.datastore.createQuery(Faq.class).field("_id").equal(new ObjectId(faq.id));
+//        UpdateOperations uo = MorphiaObject.datastore.createUpdateOperations(Faq.class);
+//        MorphiaObject.datastore.update(q, uo);
+        Logger.debug(faq.toString());
+        if ( faq.id != null ) {
+            MorphiaObject.datastore.merge(faq);
+        } else {
+            MorphiaObject.datastore.save(faq);
+        }
+        //delete(faq.getUUID());
+        //
     }
 
     public static void delete(String idToDelete) {
         Faq toDelete = MorphiaObject.datastore.find(Faq.class).field("_id").equal(new ObjectId(idToDelete)).get();
         if (toDelete != null) {
             Logger.info("toDelete: " + toDelete);
-            MorphiaObject.datastore.delete(toDelete);
+            MorphiaObject.datastore.delete(Faq.class, toDelete.id);
         } else {
             Logger.debug("ID No Found: " + idToDelete);
         }
@@ -52,6 +68,6 @@ public class Faq {
 
     @Override
     public String toString() {
-        return id + ":" + question + ":" + answer;
+        return getUUID() + ":" + id + ":" + question + ":" + answer;
     }
 }
