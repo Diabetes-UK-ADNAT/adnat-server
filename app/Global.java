@@ -20,7 +20,7 @@ public class Global extends GlobalSettings {
 			e.printStackTrace();
 		}
 		MorphiaObject.morphia = new Morphia();
-		MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "test2");
+		MorphiaObject.datastore = MorphiaObject.morphia.createDatastore(MorphiaObject.mongo, "adnat");
 		MorphiaObject.datastore.ensureIndexes();   
 		MorphiaObject.datastore.ensureCaps();  
 

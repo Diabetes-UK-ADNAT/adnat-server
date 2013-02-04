@@ -20,7 +20,7 @@ object ApplicationBuild extends Build {
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
 	//mongo
-    resolvers += "Maven repository" at "http://morphia.googlecode.com/svn/mavenrepo/",
+        resolvers += "Maven repository" at "http://morphia.googlecode.com/svn/mavenrepo/",
 	resolvers += "MongoDb Java Driver Repository" at "http://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/"
   )
 
