@@ -1,7 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -11,7 +10,6 @@ import play.data.validation.Constraints.Required;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.query.*;
 
 import controllers.MorphiaObject;
 
@@ -20,7 +18,6 @@ public class Faq {
 
     @Id
     public ObjectId id;
-    
     @Required
     public String question;
     @Required
@@ -33,7 +30,7 @@ public class Faq {
             return new ArrayList<Faq>();
         }
     }
-    
+
     public String getUUID() {
         return id == null ? null : id.toString();
     }
@@ -43,7 +40,7 @@ public class Faq {
 //        UpdateOperations uo = MorphiaObject.datastore.createUpdateOperations(Faq.class);
 //        MorphiaObject.datastore.update(q, uo);
         Logger.debug(faq.toString());
-        if ( faq.id != null ) {
+        if (faq.id != null) {
             MorphiaObject.datastore.merge(faq);
         } else {
             MorphiaObject.datastore.save(faq);
