@@ -5,11 +5,10 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>adnat-api</name>
             <source-roots>
-                <root id="src.conf.dir"/>
-                <root id="src.dir"/>
+                <root id="src.dir" name="app"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.src.dir" name="test"/>
             </test-roots>
         </data>
     </configuration>
