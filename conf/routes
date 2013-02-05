@@ -1,15 +1,16 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
-# ~~~~
 
-# Home page
 GET     /                       controllers.Application.index()
-GET	/faqs.json		controllers.Application.json()
-GET	/faqs/:id.json		controllers.Application.jsonById(id: String)
-DELETE	/faqs/:id.json		controllers.Application.deleteById(id: String)
-POST	/faqs.json		controllers.Application.createFaq()
+
+GET	/faqs.json		controllers.FaqController.getAll()
+GET	/faqs/:id.json		controllers.FaqController.getById(id: String)
+DELETE	/faqs/:id.json		controllers.FaqController.delete(id: String)
+POST	/faqs.json		controllers.FaqController.create()
+
 GET	/group			controllers.Application.group()
 POST	/sayHello		controllers.Application.sayHello()
+
 OPTIONS /*url                   controllers.Application.options(url: String)
 
 # Map static resources from the /public folder to the /assets URL path

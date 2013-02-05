@@ -1,6 +1,5 @@
 package controllers;
 
-import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.BodyParser;
 import play.libs.Json;
@@ -11,15 +10,20 @@ import org.codehaus.jackson.node.ObjectNode;
 import views.html.*;
 import models.*;
 import play.Logger;
-import org.bson.types.ObjectId;
 
-public class Application extends Controller {
+public class Application extends BaseController {
 
-    public static Result index() {
+    public static Result options(String url) {
+        Logger.debug(url);
+        setHeaders();
+        return ok();
+    }
+
+    public static Result index() { // FIXME remove
         return ok(index.render("Your new application is ready."));
     }
 
-    public static Result group() {
+    public static Result group() { //FIXME remove
         Group g = new Group();
         g.groupName = "my group";
         g.date = new java.util.Date();
@@ -37,59 +41,7 @@ public class Application extends Controller {
     }
 
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result createFaq() {
-        JsonNode json = request().body().asJson();
-        ObjectNode result = Json.newObject();
-        String uuid = json.findPath("uuid").getTextValue();
-        String question = json.findPath("question").getTextValue();
-        String answer = json.findPath("answer").getTextValue();
-        if (question == null) {
-            result.put("status", "KO");
-            result.put("message", "Missing parameter [question]");
-            return badRequest(result);
-        } else {
-            models.Faq faq = new models.Faq();
-            faq.id = uuid == null ? null : new ObjectId(uuid);
-            faq.question = question;
-            faq.answer = answer;
-            Faq.save(faq);
-            Logger.debug(faq.toString());
-            return ok(result);
-        }
-    }
-
-    private static void setHeaders() {
-        response().setHeader("Access-Control-Allow-Origin", "*");
-        response().setHeader("Access-Control-Allow-Headers", "origin, X-Requested-With, x-requested-with, content-type");
-        response().setHeader("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-    }
-
-    public static Result options(String url) {
-        Logger.debug(url);
-        setHeaders();
-        return ok();
-    }
-
-    public static Result json() {
-        setHeaders();
-        return ok(Json.toJson(Faq.all()));
-    }
-
-    public static Result jsonById(String id) {
-        Logger.debug(id);
-        setHeaders();
-        return ok(Json.toJson(Faq.find(id)));
-    }
-
-    public static Result deleteById(String id) {
-        Logger.debug(id);
-        setHeaders();
-        Faq.delete(id);
-        return ok();
-    }
-
-    @BodyParser.Of(play.mvc.BodyParser.Json.class)
-    public static Result sayHello() {
+    public static Result sayHello() { //FIXME remove
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         String name = json.findPath("name").getTextValue();

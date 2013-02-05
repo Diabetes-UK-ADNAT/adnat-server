@@ -18,7 +18,7 @@ object ApplicationBuild extends Build {
 	"com.google.code.morphia" % "morphia-logging-slf4j" % "0.99"
   )
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
+  val main = play.Project(appName, appVersion, appDependencies).settings(
 	//mongo
         resolvers += "Maven repository" at "http://morphia.googlecode.com/svn/mavenrepo/",
 	resolvers += "MongoDb Java Driver Repository" at "http://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/"
