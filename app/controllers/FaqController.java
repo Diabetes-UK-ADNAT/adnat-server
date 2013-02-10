@@ -16,7 +16,7 @@ public class FaqController extends BaseController {
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         String uuid = json.findPath("uuid").getTextValue();
-        int category = json.findPath("category").getIntValue();
+        String category = json.findPath("category").getTextValue();
         String question = json.findPath("question").getTextValue();
         String answer = json.findPath("answer").getTextValue();
         setHeaders();

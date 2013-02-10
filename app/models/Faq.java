@@ -23,7 +23,7 @@ public class Faq {
     @Required
     public String answer;
     @Required
-    public int category;
+    public String category;
 
     public static List<Faq> all() {
         if (MorphiaObject.datastore != null) {
