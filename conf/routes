@@ -2,15 +2,15 @@
 # This file defines all application routes (Higher priority routes first)
 
 GET     /                       controllers.Application.index()
-GET     /ping                   controllers.Application.ping()
+GET     /v1/ping                controllers.Application.ping()
 
-GET	/faqs.json		controllers.FaqController.getAll()
-GET	/faqs/:id.json		controllers.FaqController.getById(id: String)
-DELETE	/faqs/:id.json		controllers.FaqController.delete(id: String)
-POST	/faqs.json		controllers.FaqController.create()
+GET	/v1/faqs.json		controllers.FaqController.getAll()
+GET	/v1/faqs/:id.json       controllers.FaqController.getById(id: String)
+DELETE	/v1/faqs/:id.json	controllers.FaqController.delete(id: String)
+POST	/v1/faqs.json		controllers.FaqController.create()
 
-GET	/group			controllers.Application.group()
-POST	/sayHello		controllers.Application.sayHello()
+GET	/v1/group		controllers.Application.group()
+POST	/v1/sayHello		controllers.Application.sayHello()
 
 OPTIONS /*url                   controllers.Application.options(url: String)
 

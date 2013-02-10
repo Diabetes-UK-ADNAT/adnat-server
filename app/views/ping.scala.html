@@ -1,9 +1,14 @@
 @(ack: String, currentTime: java.util.Date, deployDate: String)
 
-@ack
-<p/>
-@currentTime
-<p/>
-@currentTime.getTime()
-<p/>
-@deployDate
+@main("ping") {
+
+    @ack
+    <p/>
+    @currentTime
+    <p/>
+    @currentTime.getTime()
+    <p/>
+    @deployDate
+
+}
+
