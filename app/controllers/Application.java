@@ -1,15 +1,19 @@
 package controllers;
 
+import java.util.Date;
+import java.util.List;
 import play.mvc.Result;
 import play.mvc.BodyParser;
 import play.libs.Json;
 import play.libs.Json.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
-
 import views.html.*;
 import models.*;
 import play.Logger;
+import play.Play;
+
+import static play.mvc.Results.badRequest;
 
 public class Application extends BaseController {
 
@@ -19,8 +23,31 @@ public class Application extends BaseController {
         return ok();
     }
 
-    public static Result index() { // FIXME remove
-        return ok(index.render("Your new application is ready."));
+    public static Result index() {
+        play.Logger.info("index");
+        return badRequest();
+    }
+
+    public static Result ping() {
+        play.Logger.info("ping");
+
+        //touch monitoring row
+        Date currentTime = new Date();
+        Ping pingModel = null;
+        List<Ping> m = Ping.all();
+        if (null == m || m.isEmpty()) {
+            pingModel = new Ping();
+        } else {
+            pingModel = m.get(0);
+        }
+        if (pingModel.created == null) {
+            pingModel.created = currentTime;
+        }
+        pingModel.updated = currentTime;
+        Ping.save(pingModel);
+        String ack = "ACK";
+        String deployDate = Play.application().configuration().getString("deploy.date");
+        return ok(ping.render(ack, currentTime, deployDate));
     }
 
     public static Result group() { //FIXME remove
