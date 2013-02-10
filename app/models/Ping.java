@@ -11,7 +11,6 @@ import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 
-import controllers.MorphiaObject;
 import java.util.Date;
 
 @Entity

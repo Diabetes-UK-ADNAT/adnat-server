@@ -11,8 +11,13 @@ import play.mvc.Result;
 
 public class FaqController extends BaseController {
 
+    public static Result save2(Faq faq) {
+        Logger.debug(faq.toString());
+        return ok();
+    }
+
     @BodyParser.Of(value = BodyParser.Json.class)
-    public static Result create() {
+    public static Result save() {
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         String uuid = json.findPath("uuid").getTextValue();

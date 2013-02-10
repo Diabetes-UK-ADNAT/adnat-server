@@ -1,4 +1,4 @@
-package controllers;
+package models;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
