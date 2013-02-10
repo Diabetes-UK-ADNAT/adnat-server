@@ -22,6 +22,8 @@ public class Faq {
     public String question;
     @Required
     public String answer;
+    @Required
+    public int category;
 
     public static List<Faq> all() {
         if (MorphiaObject.datastore != null) {
@@ -31,22 +33,18 @@ public class Faq {
         }
     }
 
-    public String getUUID() {
+    public String getUUID() { //fixme BaseModel
         return id == null ? null : id.toString();
     }
 
     public static void save(Faq faq) {
-//        Query q = MorphiaObject.datastore.createQuery(Faq.class).field("_id").equal(new ObjectId(faq.id));
-//        UpdateOperations uo = MorphiaObject.datastore.createUpdateOperations(Faq.class);
-//        MorphiaObject.datastore.update(q, uo);
-        Logger.debug(faq.toString());
+       Logger.debug(faq.toString());
         if (faq.id != null) {
             MorphiaObject.datastore.merge(faq);
         } else {
             MorphiaObject.datastore.save(faq);
         }
-        //delete(faq.getUUID());
-        //
+
     }
 
     public static void delete(String idToDelete) {
@@ -65,6 +63,6 @@ public class Faq {
 
     @Override
     public String toString() {
-        return getUUID() + ":" + id + ":" + question + ":" + answer;
+        return getUUID() + ":" + id + ":" + category + ":" + question + ":" + answer;
     }
 }

@@ -16,6 +16,7 @@ public class FaqController extends BaseController {
         JsonNode json = request().body().asJson();
         ObjectNode result = Json.newObject();
         String uuid = json.findPath("uuid").getTextValue();
+        int category = json.findPath("category").getIntValue();
         String question = json.findPath("question").getTextValue();
         String answer = json.findPath("answer").getTextValue();
         setHeaders();
@@ -26,6 +27,7 @@ public class FaqController extends BaseController {
         } else {
             Faq faq = new Faq();
             faq.id = uuid == null ? null : new ObjectId(uuid);
+            faq.category = category;
             faq.question = question;
             faq.answer = answer;
             Faq.save(faq);
