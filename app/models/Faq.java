@@ -5,8 +5,10 @@ import org.bson.types.ObjectId;
 import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
 import static models.BaseModel.ds;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Faq extends BaseModel {
 
     @Required

@@ -6,13 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.bson.types.ObjectId;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseModel {
 
     final static protected Datastore ds = MorphiaObject.datastore;
     @Id
+    @JsonIgnore
     public ObjectId id;
     @Required
     public Date updated;
@@ -41,6 +45,7 @@ public class BaseModel {
 
     public static <T extends BaseModel> void saveItem(T item) {
         Logger.debug(item.toString());
+        item.updated = new Date();
         if (item.id != null) {
             ds.merge(item);
         } else {
