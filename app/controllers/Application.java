@@ -40,11 +40,9 @@ public class Application extends BaseController {
         } else {
             pingModel = m.get(0);
         }
-        if (pingModel.created == null) {
-            pingModel.created = currentTime;
-        }
         pingModel.updated = currentTime;
         Ping.save(pingModel);
+        
         String ack = "ACK";
         String deployDate = Play.application().configuration().getString("deploy.date");
         return ok(ping.render(ack, currentTime, deployDate));

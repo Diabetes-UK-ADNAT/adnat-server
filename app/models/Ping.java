@@ -21,8 +21,6 @@ public class Ping {
     public ObjectId id;
     @Required
     public Date updated;
-    @Required
-    public Date created;
 
     public static List<Ping> all() {
         if (MorphiaObject.datastore != null) {
@@ -61,6 +59,6 @@ public class Ping {
 
     @Override
     public String toString() {
-        return getUUID() + ":" + id + ":" + created + ":" + updated;
+        return getUUID() + ":" + id + ":" + new Date(id.getTime()) + ":" + updated;
     }
 }
