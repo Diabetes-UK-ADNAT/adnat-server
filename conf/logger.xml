@@ -4,7 +4,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %date{ISO8601} %r [%thread] %-5level %logger{16}%C - %msg%n
+                %date{ISO8601} %r [%thread] %-5level - %msg%ex{10}%n 
             </pattern>
         </encoder>
     </appender>
@@ -13,7 +13,7 @@
         <file>${application.home}/logs/application.log</file>
         <encoder>
             <pattern>
-                %date{ISO8601} %r [%thread] %-5level %logger{16}%C - %msg%n
+                %date{ISO8601} %r [%thread] %-5level - %msg%ex{10}%n 
             </pattern>
         </encoder>
     </appender>

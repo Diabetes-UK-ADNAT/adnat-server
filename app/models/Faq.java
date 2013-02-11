@@ -4,6 +4,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
+import java.util.ArrayList;
 import static models.BaseModel.ds;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -16,8 +17,8 @@ public class Faq extends BaseModel {
     @Required
     public String answer;
     @Required
-    public String category;
-
+    public List<String> categories = new ArrayList<String>();
+    
     public static Faq find(String id) {
         return ds.find(Faq.class).field("_id").equal(new ObjectId(id)).get();
     }
@@ -37,8 +38,6 @@ public class Faq extends BaseModel {
     @Override
     public String toString() {
         return super.toString()
-                + ":"
-                + category
                 + ":"
                 + question
                 + ":"

@@ -27,7 +27,9 @@ public class BaseModel {
 
     @Override
     public String toString() {
-        return getUUID()
+        return  getClass().getSimpleName().toString()
+                + ":"
+                + getUUID()
                 + ":"
                 + id + ":"
                 + updated
