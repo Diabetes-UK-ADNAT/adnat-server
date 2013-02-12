@@ -40,7 +40,6 @@ public class FaqController extends BaseController {
 
     public static Result getById(String id) {
         Logger.debug(id);
-        Faq faq = Faq.find(id);
-        return okJsonWithHeaders(faq);
+        return okJsonWithHeaders(Faq.find(id));
     }
 }
