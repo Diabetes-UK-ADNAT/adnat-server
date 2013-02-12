@@ -41,10 +41,6 @@ public class FaqController extends BaseController {
     public static Result getById(String id) {
         Logger.debug(id);
         Faq faq = Faq.find(id);
-        if (faq != null) {
-            return okJsonWithHeaders(faq);
-        } else {
-            return okWithHeaders();
-        }
+        return okJsonWithHeaders(faq);
     }
 }
