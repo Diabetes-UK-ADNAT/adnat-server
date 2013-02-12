@@ -7,7 +7,6 @@ GET     /v1/ping                controllers.Application.ping()
 GET	/v1/faqs.json		controllers.FaqController.getAll()
 GET	/v1/faqs/:id.json       controllers.FaqController.getById(id: String)
 POST	/v1/faqs.json		controllers.FaqController.save()
-#POST	/v1/faqs.json		controllers.FaqController.save2(faq: models.Faq)
 DELETE	/v1/faqs/:id.json	controllers.FaqController.delete(id: String)
 
 OPTIONS /*url                   controllers.Application.options(url: String)
