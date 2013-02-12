@@ -1,19 +1,11 @@
 
-import java.util.ArrayList;
-import models.Faq;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.*;
 
 import play.mvc.*;
-import play.test.*;
 import play.libs.F.*;
 
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
-import play.libs.Json;
-import play.libs.WS;
-import static play.mvc.Controller.request;
 
 //import static org.fluentlenium.core.filter.FilterConstructor.*;
 //import static play.mvc.Controller.response;
