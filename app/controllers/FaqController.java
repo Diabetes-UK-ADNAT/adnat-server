@@ -1,7 +1,6 @@
 package controllers;
 
 import models.Faq;
-import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.libs.Json;
