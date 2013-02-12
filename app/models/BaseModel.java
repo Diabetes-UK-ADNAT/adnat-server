@@ -8,6 +8,9 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import play.Logger;
 import play.data.validation.Constraints.Required;
 
@@ -27,12 +30,11 @@ public class BaseModel {
 
     @Override
     public String toString() {
-        return  getClass().getSimpleName().toString()
-                + ":"
-                + getUUID()
+
+        return getClass().getSimpleName().toString()
                 + ":"
                 + id + ":"
-                + updated
+                + ISODateTimeFormat.dateTime().print(new DateTime(updated))
                 + ":"
                 + (id != null ? new Date(id.getTime()) : "null");
     }
