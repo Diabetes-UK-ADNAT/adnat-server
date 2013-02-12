@@ -1,4 +1,8 @@
 
+import java.util.ArrayList;
+import models.Faq;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.*;
 
 import play.mvc.*;
@@ -7,24 +11,72 @@ import play.libs.F.*;
 
 import static play.test.Helpers.*;
 import static org.fest.assertions.Assertions.*;
+import play.libs.Json;
+import play.libs.WS;
+import static play.mvc.Controller.request;
 
-import static org.fluentlenium.core.filter.FilterConstructor.*;
+//import static org.fluentlenium.core.filter.FilterConstructor.*;
+//import static play.mvc.Controller.response;
+import static play.mvc.Http.Status.OK;
 
 public class IntegrationTest {
 
-	/**
-	 * add your integration test here in this example we just check if the
-	 * welcome page is being shown
-	 */
-	@Test
-	public void test() {
-		running(testServer(3333,
-				fakeApplication(inMemoryDatabase())),
-				HTMLUNIT, new Callback<TestBrowser>() {
-			public void invoke(TestBrowser browser) {
-				browser.goTo("http://localhost:3333/v1/ping");
-				assertThat(browser.pageSource()).contains("ACK");
-			}
-		});
-	}
+    @Test
+    public void optionsControllerTest() {
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                Result result;
+                result = callAction(controllers.routes.ref.Application.options("URL"));
+                // fixme test headers
+                assertThat(header("Access-Control-Allow-Origin", result))
+                        .isEqualTo("*");
+                assertThat(header("Access-Control-Allow-Headers", result))
+                        .isEqualTo("origin, X-Requested-With, x-requested-with, content-type");
+                assertThat(header("Access-Control-Allow-Methods", result))
+                        .isEqualTo("PUT, GET, POST, DELETE, OPTIONS");
+                assertThat(status(result)).isEqualTo(OK);
+                assertThat(contentType(result)).isEqualTo(null);
+                assertThat(charset(result)).isEqualTo(null);
+                assertThat(contentAsString(result)).contains("");
+            }
+        });
+    }
+
+    @Test
+    public void badRoute() {
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                Result result = routeAndCall(fakeRequest(GET, "/nadaroute"));
+                assertThat(result).isNull();
+            }
+        });
+    }
+
+    @Test
+    public void indexControllerTest() {
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                //Result result = routeAndCall(fakeRequest(GET, "/index"));
+                Result result = callAction(controllers.routes.ref.Application.index());
+                assertThat(status(result)).isEqualTo(400);
+                assertThat(contentType(result)).isEqualTo(null);
+                assertThat(charset(result)).isEqualTo(null);
+                assertThat(contentAsString(result)).contains("");
+            }
+        });
+    }
+
+    @Test
+    public void pingControllerTest() {
+        running(fakeApplication(), new Runnable() {
+            public void run() {
+                //Result result = callAction(controllers.routes.ref.Application.ping());
+                Result result = routeAndCall(fakeRequest(GET, "/v1/ping"));
+                assertThat(status(result)).isEqualTo(OK);
+                assertThat(contentType(result)).isEqualTo("text/html");
+                assertThat(charset(result)).isEqualTo("utf-8");
+                assertThat(contentAsString(result)).contains("ACK");
+            }
+        });
+    }
 }

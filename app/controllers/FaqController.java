@@ -17,6 +17,8 @@ public class FaqController extends BaseController {
         Faq faq = Json.fromJson(json, Faq.class);
         faq.id = getObjectId(json);
         Faq.save(faq);
+        
+        // fixme return 201 created with location header or 200 ok for update
         return okWithHeaders();
     }
     
