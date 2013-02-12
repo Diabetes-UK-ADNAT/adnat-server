@@ -30,13 +30,18 @@ public class BaseModel {
 
     @Override
     public String toString() {
+        String created = id != null
+                ? ISODateTimeFormat.dateTime()
+                .print(new DateTime(new Date(id.getTime())))
+                : "null";
 
         return getClass().getSimpleName().toString()
-                + ":"
-                + id + ":"
-                + ISODateTimeFormat.dateTime().print(new DateTime(updated))
-                + ":"
-                + (id != null ? new Date(id.getTime()) : "null");
+                + ","
+                + id
+                + ","
+                + created
+                + ","
+                + ISODateTimeFormat.dateTime().print(new DateTime(updated));
     }
 
     public static <T extends BaseModel> List<T> allItems(Class clazz) {

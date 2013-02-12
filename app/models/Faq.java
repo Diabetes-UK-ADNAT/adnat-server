@@ -38,9 +38,9 @@ public class Faq extends BaseModel {
     @Override
     public String toString() {
         return super.toString()
-                + ":"
+                + ","
                 + question
-                + ":"
+                + ","
                 + answer;
     }
 }

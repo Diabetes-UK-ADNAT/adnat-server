@@ -46,6 +46,6 @@ public class Group {
 
     @Override
     public String toString() {
-        return id + ":" + groupName;
+        return id + "," + groupName;
     }
 }
