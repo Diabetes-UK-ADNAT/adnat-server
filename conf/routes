@@ -9,6 +9,11 @@ GET	/v1/faqs/:id.json       controllers.FaqController.getById(id: String)
 POST	/v1/faqs.json		controllers.FaqController.save()
 DELETE	/v1/faqs/:id.json	controllers.FaqController.delete(id: String)
 
+GET	/v1/contents.json	controllers.ContentController.getAll()
+GET	/v1/contents/:id.json   controllers.ContentController.getById(id: String)
+POST	/v1/contents.json	controllers.ContentController.save()
+DELETE	/v1/contents/:id.json	controllers.ContentController.delete(id: String)
+
 OPTIONS /*url                   controllers.Application.options(url: String)
 
 # Map static resources from the /public folder to the /assets URL path
