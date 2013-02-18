@@ -14,6 +14,12 @@ GET	/v1/contents/:id.json   controllers.ContentController.getById(id: String)
 POST	/v1/contents.json	controllers.ContentController.save()
 DELETE	/v1/contents/:id.json	controllers.ContentController.delete(id: String)
 
+GET	/v1/persons.json	controllers.PersonController.getAll()
+GET	/v1/persons/:id.json    controllers.PersonController.getById(id: String)
+POST	/v1/persons.json	controllers.PersonController.save()
+DELETE	/v1/persons/:id.json	controllers.PersonController.delete(id: String)
+
+
 OPTIONS /*url                   controllers.Application.options(url: String)
 
 # Map static resources from the /public folder to the /assets URL path

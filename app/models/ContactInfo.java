@@ -1,9 +1,10 @@
 package models;
 
 public class ContactInfo {
-    Name name;
-    String address;
-    String cell;
-    String telephone;
-    String email;
+
+    public Name name;
+    public String address;
+    public String cell;
+    public String telephone;
+    public String email;
 }

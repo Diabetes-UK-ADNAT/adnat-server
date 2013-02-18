@@ -1,6 +1,8 @@
 package models;
+
 public class Account {
-    String username;
-    String password;
-    String authProvider;
+
+    public String username;
+    public String password;
+    public String authProvider;
 }

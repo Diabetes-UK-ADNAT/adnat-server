@@ -2,6 +2,6 @@ package models;
 
 public class Name {
 
-    String firstNames;
-    String lastName;
+    public String firstNames;
+    public String lastName;
 }
