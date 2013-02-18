@@ -15,6 +15,7 @@ public class Person extends BaseModel {
 
     @Required
     public Name name;
+    public Date dob;
     @Required
     public ContactInfo contactInfo;
     public Account account;
