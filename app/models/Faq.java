@@ -16,6 +16,7 @@ public class Faq extends BaseModel {
     public String question;
     @Required
     public String answer;
+    public int ordinal;
     @Required
     public List<String> categories = new ArrayList<String>();
     
