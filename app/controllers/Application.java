@@ -13,6 +13,9 @@ import static play.mvc.Results.badRequest;
 
 public class Application extends BaseController {
 
+    public static final String FLASH_MESSAGE_KEY = "message";
+    public static final String FLASH_ERROR_KEY = "error";
+
     public static Result options(String url) {
         Logger.debug(url);
         setHeaders();
@@ -21,7 +24,8 @@ public class Application extends BaseController {
 
     public static Result index() {
         play.Logger.info("index");
-        return badRequest();
+        //return badRequest();
+        return ok(index.render());
     }
 
     public static Result ping() {
@@ -42,5 +46,10 @@ public class Application extends BaseController {
         String ack = "ACK";
         String deployDate = Play.application().configuration().getString("deploy.date");
         return ok(ping.render(ack, currentTime, deployDate));
+    }
+
+    public static Result oAuthDenied(final String providerKey) {
+        flash(FLASH_ERROR_KEY, "You need to accept the OAuth connection in order to use this website!");
+        return redirect(routes.Application.index());
     }
 }

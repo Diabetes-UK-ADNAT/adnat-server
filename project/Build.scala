@@ -12,19 +12,23 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-	//mongo
-	"com.google.code.morphia" % "morphia" % "0.99",
-	"org.mongodb" % "mongo-java-driver" % "2.7.3",
-	"com.google.code.morphia" % "morphia-logging-slf4j" % "0.99"
+    //mongo
+    "com.google.code.morphia" % "morphia" % "0.99",
+    "org.mongodb" % "mongo-java-driver" % "2.7.3",
+    "com.google.code.morphia" % "morphia-logging-slf4j" % "0.99",
+        
+    // play authenticate
+    "com.feth" %% "play-authenticate" % "0.2.5-SNAPSHOT"
   )
 
  val main = play.Project(appName, appVersion, appDependencies).settings(
-	//mongo
-        resolvers += "Maven repository" at "http://morphia.googlecode.com/svn/mavenrepo/",
-	resolvers += "MongoDb Java Driver Repository" at "http://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/"
+    //mongo
+    resolvers += "Maven repository" at "http://morphia.googlecode.com/svn/mavenrepo/",
+    resolvers += "MongoDb Java Driver Repository" at "http://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/",
+    // play authenticate
+    resolvers += Resolver.url("play-easymail (release)", url("http://joscha.github.com/play-easymail/repo/releases/"))(Resolver.ivyStylePatterns),
+    resolvers += Resolver.url("play-easymail (snapshot)", url("http://joscha.github.com/play-easymail/repo/snapshots/"))(Resolver.ivyStylePatterns),
+    resolvers += Resolver.url("play-authenticate (release)", url("http://joscha.github.com/play-authenticate/repo/releases/"))(Resolver.ivyStylePatterns),
+    resolvers += Resolver.url("play-authenticate (snapshot)", url("http://joscha.github.com/play-authenticate/repo/snapshots/"))(Resolver.ivyStylePatterns)
   )
-
-
-
-
 }

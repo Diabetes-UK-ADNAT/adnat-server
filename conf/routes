@@ -22,6 +22,13 @@ DELETE	/v1/persons/:id.json	controllers.PersonController.delete(id: String)
 
 OPTIONS /*url                   controllers.Application.options(url: String)
 
+# play authenticate
+GET  /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
+GET  /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
+GET  /authenticate/:provider/denied     controllers.Application.oAuthDenied(provider: String)
+
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.at(path="/public", file)
 

@@ -1,0 +1,40 @@
+@import com.feth.play.module.pa.views.html._
+
+@main("index") {
+    <h1>Actions</h1>
+
+    <!--
+    GET  /authenticate/:provider     
+    com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
+    GET  /authenticate/:provider/denied     
+    controllers.Application.oAuthDenied(provider: String)
+    -->
+    
+    <a  href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout">Logout</a>
+
+    @currentAuth() { auth =>
+        @if(auth != null) {
+        <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout">Logout</a>
+    }
+
+}
+
+    @currentAuth() { auth =>
+    @if(auth != null) {
+        Logged in with provider '@auth.getProvider()' and the user ID '@auth.getId()'<br/>
+           Your session expires
+           @if(auth.expires() == -1){
+               never
+           } else {
+               at @auth.expires() (UNIX timestamp)
+           }
+        }
+    }
+
+
+    <h1>Providers</h1>
+    @forProviders() { p =>
+        <a href="@p.getUrl()">@p.getKey()</a>
+    }
+
+}
