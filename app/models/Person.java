@@ -18,7 +18,7 @@ public class Person extends BaseModel {
     public Date dob;
     @Required
     public ContactInfo contactInfo;
-    public Account account;
+    public AccountX account;
     public Date agreedToTermsAndConditions;
     public Date agreedToPrivacyPolicy;
     public List<String> roles = new ArrayList<String>();

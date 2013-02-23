@@ -1,6 +1,6 @@
 package models;
 
-public class Account {
+public class AccountX {
 
     public String username;
     public String password;

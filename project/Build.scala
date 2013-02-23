@@ -16,8 +16,10 @@ object ApplicationBuild extends Build {
     "com.google.code.morphia" % "morphia" % "0.99",
     "org.mongodb" % "mongo-java-driver" % "2.7.3",
     "com.google.code.morphia" % "morphia-logging-slf4j" % "0.99",
+    "mysql" % "mysql-connector-java" % "5.1.18",
         
     // play authenticate
+    "be.objectify"  %%  "deadbolt-java"     % "2.1-SNAPSHOT",
     "com.feth" %% "play-authenticate" % "0.2.5-SNAPSHOT"
   )
 
@@ -29,6 +31,8 @@ object ApplicationBuild extends Build {
     resolvers += Resolver.url("play-easymail (release)", url("http://joscha.github.com/play-easymail/repo/releases/"))(Resolver.ivyStylePatterns),
     resolvers += Resolver.url("play-easymail (snapshot)", url("http://joscha.github.com/play-easymail/repo/snapshots/"))(Resolver.ivyStylePatterns),
     resolvers += Resolver.url("play-authenticate (release)", url("http://joscha.github.com/play-authenticate/repo/releases/"))(Resolver.ivyStylePatterns),
-    resolvers += Resolver.url("play-authenticate (snapshot)", url("http://joscha.github.com/play-authenticate/repo/snapshots/"))(Resolver.ivyStylePatterns)
+    resolvers += Resolver.url("play-authenticate (snapshot)", url("http://joscha.github.com/play-authenticate/repo/snapshots/"))(Resolver.ivyStylePatterns),
+    resolvers += Resolver.url("Objectify Play Repository", url("http://schaloner.github.com/releases/"))(Resolver.ivyStylePatterns),
+    resolvers += Resolver.url("Objectify Play Repository - snapshots", url("http://schaloner.github.com/snapshots/"))(Resolver.ivyStylePatterns)
   )
 }

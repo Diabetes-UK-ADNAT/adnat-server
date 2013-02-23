@@ -1,1 +1,3 @@
+10000:be.objectify.deadbolt.java.DeadboltPlugin
 10005:service.MyUserServicePlugin
+10040:providers.MyUsernamePasswordAuthProvider
