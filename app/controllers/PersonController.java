@@ -1,5 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import models.Person;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
@@ -32,6 +34,8 @@ public class PersonController extends BaseController {
         return okWithHeaders();
     }
 
+    @Restrict(
+            @Group(Application.USER_ROLE))
     public static Result getAll() {
         Logger.debug("getAll");
         return okJsonWithHeaders(Person.all());

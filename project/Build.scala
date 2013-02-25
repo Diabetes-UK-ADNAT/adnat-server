@@ -24,6 +24,9 @@ object ApplicationBuild extends Build {
   )
 
  val main = play.Project(appName, appVersion, appDependencies).settings(
+    // https://groups.google.com/forum/#!msg/play-framework/Lfa6VzNqOVE/9XvxLyfTILUJ
+    ebeanEnabled := true, 
+
     //mongo
     resolvers += "Maven repository" at "http://morphia.googlecode.com/svn/mavenrepo/",
     resolvers += "MongoDb Java Driver Repository" at "http://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/",

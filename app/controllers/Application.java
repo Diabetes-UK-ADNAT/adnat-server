@@ -11,7 +11,7 @@ import play.Play;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import models.User;
+import models.auth.User;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -68,6 +68,7 @@ public class Application extends BaseController {
         flash(FLASH_ERROR_KEY, "You need to accept the OAuth connection in order to use this website!");
         return redirect(routes.Application.index());
     }
+
     public static Result index() {
         return ok(index.render());
     }
@@ -93,6 +94,7 @@ public class Application extends BaseController {
     }
 
     public static Result login() {
+        // FIXME for SPA return 401
         return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
     }
 

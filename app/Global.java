@@ -15,7 +15,7 @@ import com.feth.play.module.pa.exceptions.AuthException;
 import models.*;
 import java.util.Arrays;
 
-import models.SecurityRole;
+import models.auth.SecurityRole;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.PlayAuthenticate.Resolver;
