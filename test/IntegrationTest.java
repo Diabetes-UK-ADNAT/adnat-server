@@ -50,9 +50,9 @@ public class IntegrationTest {
             public void run() {
                 //Result result = routeAndCall(fakeRequest(GET, "/index"));
                 Result result = callAction(controllers.routes.ref.Application.index());
-                assertThat(status(result)).isEqualTo(400);
-                assertThat(contentType(result)).isEqualTo(null);
-                assertThat(charset(result)).isEqualTo(null);
+                assertThat(status(result)).isEqualTo(200);
+                assertThat(contentType(result)).isEqualTo("text/html");
+                assertThat(charset(result)).isEqualTo("utf-8");
                 assertThat(contentAsString(result)).contains("");
             }
         });

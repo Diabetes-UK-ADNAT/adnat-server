@@ -3,19 +3,24 @@
 
 GET     /v1/ping                controllers.Application.ping()
 
-GET	/v1/faqs.json		controllers.FaqController.getAll()
-GET	/v1/faqs/:id.json       controllers.FaqController.getById(id: String)
+GET     /v1/contactrequests.json		controllers.ContactRequestController.getAll()
+GET     /v1/contactrequests/:id.json    controllers.ContactRequestController.getById(id: String)
+POST	/v1/contactrequests.json		controllers.ContactRequestController.save()
+DELETE	/v1/contactrequests/:id.json	controllers.ContactRequestController.delete(id: String)
+
+GET     /v1/faqs.json		controllers.FaqController.getAll()
+GET     /v1/faqs/:id.json   controllers.FaqController.getById(id: String)
 POST	/v1/faqs.json		controllers.FaqController.save()
 DELETE	/v1/faqs/:id.json	controllers.FaqController.delete(id: String)
 
-GET	/v1/contents.json	controllers.ContentController.getAll()
-GET	/v1/contents/:id.json   controllers.ContentController.getById(id: String)
-POST	/v1/contents.json	controllers.ContentController.save()
+GET     /v1/contents.json       controllers.ContentController.getAll()
+GET     /v1/contents/:id.json   controllers.ContentController.getById(id: String)
+POST	/v1/contents.json       controllers.ContentController.save()
 DELETE	/v1/contents/:id.json	controllers.ContentController.delete(id: String)
 
-GET	/v1/persons.json	controllers.PersonController.getAll()
-GET	/v1/persons/:id.json    controllers.PersonController.getById(id: String)
-POST	/v1/persons.json	controllers.PersonController.save()
+GET     /v1/persons.json        controllers.PersonController.getAll()
+GET     /v1/persons/:id.json    controllers.PersonController.getById(id: String)
+POST	/v1/persons.json        controllers.PersonController.save()
 DELETE	/v1/persons/:id.json	controllers.PersonController.delete(id: String)
 
 
@@ -23,6 +28,8 @@ OPTIONS /*url                   controllers.Application.options(url: String)
 
 # play authenticate
 # Home page
+
+# hide play-authenticate for now 
 GET     /                           controllers.Application.index
 GET     /restricted                 controllers.Application.restricted
 GET     /assets/javascript/routes.js    controllers.Application.jsRoutes
@@ -64,6 +71,7 @@ GET     /login/password/forgot     controllers.Signup.forgotPassword(email: Stri
 POST    /login/password/forgot     controllers.Signup.doForgotPassword
 
 
+GET     /robots.txt             controllers.Assets.at(path="/public", file="robots.txt")
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.at(path="/public", file)
