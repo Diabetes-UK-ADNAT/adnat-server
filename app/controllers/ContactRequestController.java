@@ -1,26 +1,24 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
-import models.Person;
+import models.ContactRequest;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 
-public class PersonController extends BaseController {
+public class ContactRequestController extends BaseController {
 
     @BodyParser.Of(value = BodyParser.Json.class)
     public static Result save() {
         Logger.debug("save");
         JsonNode json = getJsonFromBody();
-        Person person = Json.fromJson(json, Person.class);
-        person.id = getObjectId(json);
-        boolean create = person.id == null;
-        Person.save(person);
+        ContactRequest contactRequest = Json.fromJson(json, ContactRequest.class);
+        contactRequest.id = getObjectId(json);
+        boolean create = contactRequest.id == null;
+        ContactRequest.save(contactRequest);
         if (create) {
-            response().setHeader(LOCATION, "/v1/persons/" + person.id + ".json");
+            response().setHeader(LOCATION, "/v1/contactrequests/" + contactRequest.id + ".json");
             setHeaders();
             return created();
         } else {
@@ -30,19 +28,17 @@ public class PersonController extends BaseController {
 
     public static Result delete(String id) {
         Logger.debug(id);
-        Person.delete(id);
+        ContactRequest.delete(id);
         return okWithHeaders();
     }
 
-//    @Restrict(
-//            @Group(Application.USER_ROLE))
     public static Result getAll() {
         Logger.debug("getAll");
-        return okJsonWithHeaders(Person.all());
+        return okJsonWithHeaders(ContactRequest.all());
     }
 
     public static Result getById(String id) {
         Logger.debug(id);
-        return okJsonWithHeaders(Person.find(id));
+        return okJsonWithHeaders(ContactRequest.find(id));
     }
 }
