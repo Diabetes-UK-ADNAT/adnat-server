@@ -1,7 +1,6 @@
 package controllers;
 
 import models.Assessment;
-import models.ContactRequest;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.libs.Json;
