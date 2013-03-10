@@ -3,6 +3,11 @@
 
 GET     /v1/ping                controllers.Application.ping()
 
+GET     /v1/assessments.json		controllers.AssessmentController.getAll()
+GET     /v1/assessments/:id.json    controllers.AssessmentController.getById(id: String)
+POST	/v1/assessments.json		controllers.AssessmentController.save()
+DELETE	/v1/assessments/:id.json	controllers.AssessmentController.delete(id: String)
+
 GET     /v1/contactrequests.json		controllers.ContactRequestController.getAll()
 GET     /v1/contactrequests/:id.json    controllers.ContactRequestController.getById(id: String)
 POST	/v1/contactrequests.json		controllers.ContactRequestController.save()
