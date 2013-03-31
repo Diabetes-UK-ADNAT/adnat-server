@@ -16,6 +16,8 @@ public class BaseController extends Controller {
                 "origin, X-Requested-With, x-requested-with, content-type");
         response().setHeader("Access-Control-Allow-Methods",
                 "PUT, GET, POST, DELETE, OPTIONS");
+        response().setHeader("Access-Control-Max-Age",
+                "1728000");
     }
 
     protected static Result okWithHeaders() {
