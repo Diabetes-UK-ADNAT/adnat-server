@@ -2,7 +2,8 @@ package models;
 
 class Response {
 
-    public String q;
+    public int q;
+    public int ordinal;
     public String category;
     public String text;
     public String[] optionsText;
