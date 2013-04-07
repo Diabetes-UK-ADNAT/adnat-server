@@ -18,7 +18,7 @@ public class FaqController extends BaseController {
         boolean create = faq.id == null;
         Faq.save(faq);
         if (create) {
-            response().setHeader(LOCATION, "/v1/faqs/" + faq.id + ".json");
+            response().setHeader(LOCATION, "/v1/faqs/" + faq.id);
             setHeaders();
             return created();
         } else {

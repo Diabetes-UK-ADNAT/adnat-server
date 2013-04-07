@@ -18,7 +18,7 @@ public class ContactRequestController extends BaseController {
         boolean create = contactRequest.id == null;
         ContactRequest.save(contactRequest);
         if (create) {
-            response().setHeader(LOCATION, "/v1/contactrequests/" + contactRequest.id + ".json");
+            response().setHeader(LOCATION, "/v1/contactrequests/" + contactRequest.id);
             setHeaders();
             return created();
         } else {

@@ -26,10 +26,10 @@ public class FaqControllerTest {
         faq.categories.add("one");
         faq.categories.add("two");
         JsonNode json = Json.toJson(faq);
-        Result result = routeAndCall(fakeRequest(POST, "/v1/faqs.json").withJsonBody(json));
+        Result result = routeAndCall(fakeRequest(POST, "/v1/faqs").withJsonBody(json));
         assertThat(status(result)).isEqualTo(201);
         location = header("Location", result);
-        assertThat(location).matches("^/v1/faqs/.*\\.json");
+        assertThat(location).matches("^/v1/faqs/.*");
     }
 
     private JsonNode getItem() {
@@ -81,7 +81,7 @@ public class FaqControllerTest {
                 createItem();
                 String loc3 = location;
                 //
-                result = routeAndCall(fakeRequest(GET, "/v1/faqs.json"));
+                result = routeAndCall(fakeRequest(GET, "/v1/faqs"));
                 assertThat(status(result)).isEqualTo(OK);
                 String list = contentAsString(result);
                 assertThat(list).isNotNull();
@@ -104,7 +104,7 @@ public class FaqControllerTest {
             public void run() {
                 createItem();
                 //
-                Result result = routeAndCall(fakeRequest(GET, "/v1/faqs/5119e5293004dab11d02cc49.json"));
+                Result result = routeAndCall(fakeRequest(GET, "/v1/faqs/5119e5293004dab11d02cc49"));
                 assertThat(status(result)).isEqualTo(OK);
                 String list = contentAsString(result);
                 assertThat(list).isEmpty();

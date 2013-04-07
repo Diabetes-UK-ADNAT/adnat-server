@@ -18,7 +18,7 @@ public class ContentController extends BaseController {
         boolean create = content.id == null;
         Content.save(content);
         if (create) {
-            response().setHeader(LOCATION, "/v1/contents/" + content.id + ".json");
+            response().setHeader(LOCATION, "/v1/contents/" + content.id);
             setHeaders();
             return created();
         } else {

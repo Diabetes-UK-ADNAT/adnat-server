@@ -20,7 +20,7 @@ public class PersonController extends BaseController {
         boolean create = person.id == null;
         Person.save(person);
         if (create) {
-            response().setHeader(LOCATION, "/v1/persons/" + person.id + ".json");
+            response().setHeader(LOCATION, "/v1/persons/" + person.id);
             setHeaders();
             return created();
         } else {

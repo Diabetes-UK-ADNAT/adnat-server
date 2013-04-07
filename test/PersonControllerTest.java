@@ -26,11 +26,11 @@ public class PersonControllerTest {
         person.name.lastName = "Last Name";
         JsonNode json = Json.toJson(person);
         System.out.println(json);
-        Result result = routeAndCall(fakeRequest(POST, "/v1/persons.json").withJsonBody(json));
+        Result result = routeAndCall(fakeRequest(POST, "/v1/persons").withJsonBody(json));
         assertThat(result).isNotNull();
         assertThat(status(result)).isEqualTo(201);
         location = header("Location", result);
-        assertThat(location).matches("^/v1/persons/.*\\.json");
+        assertThat(location).matches("^/v1/persons/.*");
     }
 
     private JsonNode getItem() {
@@ -82,7 +82,7 @@ public class PersonControllerTest {
                 createItem();
                 String loc3 = location;
                 //
-                result = routeAndCall(fakeRequest(GET, "/v1/persons.json"));
+                result = routeAndCall(fakeRequest(GET, "/v1/persons"));
                 assertThat(status(result)).isEqualTo(OK);
                 String list = contentAsString(result);
                 assertThat(list).isNotNull();
@@ -105,7 +105,7 @@ public class PersonControllerTest {
             public void run() {
                 createItem();
                 //
-                Result result = routeAndCall(fakeRequest(GET, "/v1/persons/5119e5293004dab11d02cc49.json"));
+                Result result = routeAndCall(fakeRequest(GET, "/v1/persons/5119e5293004dab11d02cc49"));
                 assertThat(status(result)).isEqualTo(OK);
                 String list = contentAsString(result);
                 assertThat(list).isEmpty();

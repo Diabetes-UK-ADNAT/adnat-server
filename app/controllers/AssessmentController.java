@@ -20,7 +20,7 @@ public class AssessmentController extends BaseController {
         Assessment.save(assessment);
         if (create) {
             // fixme url /v1/assessments/
-            response().setHeader(LOCATION, "/v1/assessments/" + assessment.id + ".json");
+            response().setHeader(LOCATION, "/v1/assessments/" + assessment.id);
             setHeaders();
             return created();
         } else {
