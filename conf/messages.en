@@ -124,7 +124,7 @@ playauthenticate.navigation.signup=Sign up
 playauthenticate.handler.loginfirst=You need to log in first, to view ''{0}''
 
 # play-authenticate: Profile
-playauthenticate.profile.title=User profile
+playauthenticate.profile.title=User Profile
 playauthenticate.profile.mail=Your name is {0} and your email address is {1}!
 playauthenticate.profile.unverified=unverified - click to verify
 playauthenticate.profile.verified=verified
@@ -133,7 +133,7 @@ playauthenticate.profile.providers_one = There is one provider linked with your 
 playauthenticate.profile.logged=You are currently logged in with:
 playauthenticate.profile.session=Your user ID is {0} and your session will expire on {1}
 playauthenticate.profile.session_endless=Your user ID is {0} and your session will not expire, as it is endless
-playauthenticate.profile.password_change=Change/set a password for your account
+playauthenticate.profile.password_change=Change your password
 
 # play-authenticate - sample: Index page
 playauthenticate.index.title=Welcome to Play Authenticate
