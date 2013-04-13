@@ -14,6 +14,8 @@ public class Assessment extends BaseModel {
     @Required
     public Response[] responses;
     @Required
+    public String userToken;
+    @Required
     public Score score;
 
     public static Assessment find(String id) {
