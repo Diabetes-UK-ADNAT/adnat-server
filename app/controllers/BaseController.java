@@ -13,7 +13,7 @@ public class BaseController extends Controller {
         response().setHeader("Access-Control-Allow-Origin",
                 "*");
         response().setHeader("Access-Control-Allow-Headers",
-                "origin, X-Requested-With, x-requested-with, content-type");
+                "origin, X-Requested-With, x-requested-with, content-type, X-Auth-Token");
         response().setHeader("Access-Control-Allow-Methods",
                 "PUT, GET, POST, DELETE, OPTIONS");
         response().setHeader("Access-Control-Max-Age",

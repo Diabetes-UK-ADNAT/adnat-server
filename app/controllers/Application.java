@@ -29,6 +29,9 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
+import static controllers.BaseController.okWithHeaders;
+import static play.mvc.Controller.response;
+import static play.mvc.Http.HeaderNames.LOCATION;
 
 import static play.mvc.Results.badRequest;
 
@@ -99,18 +102,41 @@ public class Application extends BaseController {
     }
 
     public static Result doLogin() {
-        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
-                .bindFromRequest();
-        if (filledForm.hasErrors()) {
-            // User did not fill everything properly
-            return badRequest(login.render(filledForm));
-        } else {
-            // Everything was filled
-            return UsernamePasswordAuthProvider.handleLogin(ctx());
-        }
+        // if auth is ok then set auth token else leave empty for no auth
+        response().setHeader("X-AUTH-TOKEN", "h7sd-asf-JDUj2");
+        return okWithHeaders();
+        
+//        // FIXME for SPA also do login action via json post return 401
+//        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+//        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
+//                .bindFromRequest();
+//        if (filledForm.hasErrors()) {
+//            // User did not fill everything properly
+//            Logger.debug(filledForm.toString());
+//            Logger.debug("Login Error");
+//            return badRequest(login.render(filledForm));
+//        } else {
+//            // Everything was filled
+//             Logger.debug("Login via Provider");
+//             return ok("You Win");
+//            //return UsernamePasswordAuthProvider.handleLogin(ctx());
+//        }
     }
-
+//    public static Result doLogin() {
+//        // FIXME for SPA also do login action via json post return 401
+//        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
+//        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
+//                .bindFromRequest();
+//        if (filledForm.hasErrors()) {
+//            // User did not fill everything properly
+//            Logger.debug("Login Error");
+//            return badRequest(login.render(filledForm));
+//        } else {
+//            // Everything was filled
+//             Logger.debug("Login via Provider");
+//            return UsernamePasswordAuthProvider.handleLogin(ctx());
+//        }
+//    }
     public static Result signup() {
         return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
     }

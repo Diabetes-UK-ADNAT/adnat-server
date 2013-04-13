@@ -19,7 +19,7 @@ public class ContactRequestController extends BaseController {
         ContactRequest.save(contactRequest);
         if (create) {
             response().setHeader(LOCATION, "/v1/contactrequests/" + contactRequest.id);
-            setHeaders();
+            setHeaders(); //FIXME remove?
             return created();
         } else {
             return okWithHeaders();
