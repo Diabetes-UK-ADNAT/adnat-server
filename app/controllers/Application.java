@@ -30,10 +30,13 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 import static controllers.BaseController.okWithHeaders;
+import java.util.HashMap;
+import org.codehaus.jackson.JsonNode;
 import static play.mvc.Controller.response;
 import static play.mvc.Http.HeaderNames.LOCATION;
 
 import static play.mvc.Results.badRequest;
+import scala.collection.Map;
 
 public class Application extends BaseController {
 
@@ -103,9 +106,27 @@ public class Application extends BaseController {
 
     public static Result doLogin() {
         // if auth is ok then set auth token else leave empty for no auth
-        response().setHeader("X-AUTH-TOKEN", "h7sd-asf-JDUj2");
-        return okWithHeaders();
+//        response().setHeader("X-AUTH-TOKEN", "h7sd-asf-JDUj2");
+
+//        appKey for touch: 8C5F216E-6A3E-444B-8371-FC872A775112
+        Logger.debug("doLogin");
+        // no json it is a form JsonNode json = getJsonFromBody();
+        //   Logger.debug(json.toString());
+        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
+                .bindFromRequest();
+        Logger.debug(filledForm.toString());
         
+        
+//        2013-04-14 00:59:17,224 44848434 [play-akka.actor.default-dispatcher-307] DEBUG - Form(of=class providers.MyUsernamePasswordAuthProvider$MyLogin, data={email=asdf@lsjkdf.com, _dc=1365919155463, password=sdfasa, appKey=8C5F216E-6A3E-444B-8371-FC872A775112}, value=Some(providers.MyUsernamePasswordAuthProvider$MyLogin@3f99e3ae), errors={})
+        
+        
+        HashMap auth = new HashMap();
+        auth.put("userToken", "h7sd-asf-JDUj2"); //FIXME REAL
+        auth.put("userName", "Eric Link");//FIXME REAL
+        return okJsonWithHeaders(auth);
+
+//        return okWithHeaders();
+
 //        // FIXME for SPA also do login action via json post return 401
 //        com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 //        final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
@@ -137,6 +158,7 @@ public class Application extends BaseController {
 //            return UsernamePasswordAuthProvider.handleLogin(ctx());
 //        }
 //    }
+
     public static Result signup() {
         return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
     }
