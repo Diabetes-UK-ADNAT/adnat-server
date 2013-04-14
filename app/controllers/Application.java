@@ -122,7 +122,9 @@ public class Application extends BaseController {
 
         HashMap auth = new HashMap(); 
         if (filledForm.field("password").value().equalsIgnoreCase("password")) { //FIXME REAL
-            auth.put("userToken", UUID.randomUUID().toString()); //FIXME REAL
+            String userToken = UUID.randomUUID().toString();
+            Logger.debug("userToken="+userToken);
+            auth.put("userToken", userToken); //FIXME REAL
             auth.put("userName", filledForm.field("email").value());//FIXME REAL
             return okJsonWithHeaders(auth);
         } else {
