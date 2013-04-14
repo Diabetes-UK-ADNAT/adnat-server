@@ -17,6 +17,8 @@ public class ContactRequest extends BaseModel {
     public String email;
     @Required
     public String message;
+    @Required
+    public String userToken;
 
     public static ContactRequest find(String id) {
         return ds.find(ContactRequest.class).field("_id").equal(new ObjectId(id)).get();
