@@ -31,6 +31,7 @@ import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 import static controllers.BaseController.okWithHeaders;
 import java.util.HashMap;
+import java.util.UUID;
 import org.codehaus.jackson.JsonNode;
 import static play.mvc.Controller.response;
 import static play.mvc.Http.HeaderNames.LOCATION;
@@ -115,15 +116,20 @@ public class Application extends BaseController {
         final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
                 .bindFromRequest();
         Logger.debug(filledForm.toString());
-        
-        
+
+
 //        2013-04-14 00:59:17,224 44848434 [play-akka.actor.default-dispatcher-307] DEBUG - Form(of=class providers.MyUsernamePasswordAuthProvider$MyLogin, data={email=asdf@lsjkdf.com, _dc=1365919155463, password=sdfasa, appKey=8C5F216E-6A3E-444B-8371-FC872A775112}, value=Some(providers.MyUsernamePasswordAuthProvider$MyLogin@3f99e3ae), errors={})
-        
-        
-        HashMap auth = new HashMap();
-        auth.put("userToken", "h7sd-asf-JDUj2"); //FIXME REAL
-        auth.put("userName", "Eric Link");//FIXME REAL
-        return okJsonWithHeaders(auth);
+
+        HashMap auth = new HashMap(); 
+        if (filledForm.field("password").value().equalsIgnoreCase("password")) { //FIXME REAL
+            auth.put("userToken", UUID.randomUUID().toString()); //FIXME REAL
+            auth.put("userName", filledForm.field("email").value());//FIXME REAL
+            return okJsonWithHeaders(auth);
+        } else {
+            auth.put("userToken", null);
+            auth.put("userName", null);
+            return okJsonWithHeaders(auth);
+        }
 
 //        return okWithHeaders();
 
