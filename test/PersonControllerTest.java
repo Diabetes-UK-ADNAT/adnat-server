@@ -87,7 +87,7 @@ public class PersonControllerTest {
                 String list = contentAsString(result);
                 assertThat(list).isNotNull();
                 assertThat(list).isNotEmpty();
-                assertThat(list).matches("^\\[\\{.*id.*name.*first.*id.*name.*first.*");
+                assertThat(list).matches("^\\[\\{.*id.*name.*first.*id.*name.*first.*X-Auth-Token.*");
                 //
                 result = routeAndCall(fakeRequest(DELETE, loc1));
                 assertThat(status(result)).isEqualTo(OK);

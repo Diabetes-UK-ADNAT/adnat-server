@@ -23,7 +23,7 @@ public class IntegrationTest {
                 assertThat(header("Access-Control-Allow-Origin", result))
                         .isEqualTo("*");
                 assertThat(header("Access-Control-Allow-Headers", result))
-                        .isEqualTo("origin, X-Requested-With, x-requested-with, content-type");
+                        .isEqualTo("origin, X-Requested-With, x-requested-with, content-type, X-Auth-Token");
                 assertThat(header("Access-Control-Allow-Methods", result))
                         .isEqualTo("PUT, GET, POST, DELETE, OPTIONS");
                 assertThat(status(result)).isEqualTo(OK);
