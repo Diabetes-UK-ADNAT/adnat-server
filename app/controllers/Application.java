@@ -70,7 +70,8 @@ public class Application extends BaseController {
 	}
 
 	public static Result index() {
-		return ok(index.render());
+		return redirect("https://myadnat.co.uk:4443/"); //FIXME URL dev/prod
+		//return ok(index.render());
 	}
 
 	public static User getLocalUser(final Session session) {
