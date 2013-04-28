@@ -33,6 +33,7 @@ import static controllers.BaseController.okWithHeaders;
 import java.util.HashMap;
 import java.util.UUID;
 import org.codehaus.jackson.JsonNode;
+import static play.mvc.Controller.request;
 import static play.mvc.Controller.response;
 import static play.mvc.Http.HeaderNames.LOCATION;
 
@@ -46,7 +47,7 @@ public class Application extends BaseController {
     public static final String USER_ROLE = "user";
 
     public static Result options(String url) {
-        Logger.debug(url);
+        Logger.debug("options" + url);
         setHeaders();
         return ok();
     }
@@ -102,10 +103,23 @@ public class Application extends BaseController {
 
     public static Result login() {
         // FIXME for SPA return 401
-        return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+        //return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
+        return okWithHeaders();//login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
     }
 
     public static Result doLogin() {
+        HashMap auth = new HashMap(); 
+	if (true) {
+	    Logger.debug("doLogin");
+            Logger.debug(request().body().toString());
+            JsonNode json = getJsonFromBody();
+            Logger.debug(json.toString());
+            String userToken = UUID.randomUUID().toString();
+            Logger.debug("userToken="+userToken);
+            auth.put("userToken", userToken); //FIXME REAL
+            auth.put("userName", "xyz");//filledForm.field("email").value());//FIXME REAL
+            return okJsonWithHeaders(auth);
+	}
         // if auth is ok then set auth token else leave empty for no auth
 //        response().setHeader("X-AUTH-TOKEN", "h7sd-asf-JDUj2");
 
@@ -120,7 +134,7 @@ public class Application extends BaseController {
 
 //        2013-04-14 00:59:17,224 44848434 [play-akka.actor.default-dispatcher-307] DEBUG - Form(of=class providers.MyUsernamePasswordAuthProvider$MyLogin, data={email=asdf@lsjkdf.com, _dc=1365919155463, password=sdfasa, appKey=8C5F216E-6A3E-444B-8371-FC872A775112}, value=Some(providers.MyUsernamePasswordAuthProvider$MyLogin@3f99e3ae), errors={})
 
-        HashMap auth = new HashMap(); 
+        //HashMap auth = new HashMap(); 
         if (filledForm.field("password").value().equalsIgnoreCase("password")) { //FIXME REAL
             String userToken = UUID.randomUUID().toString();
             Logger.debug("userToken="+userToken);
