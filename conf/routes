@@ -37,12 +37,13 @@ OPTIONS /*url                   controllers.Application.options(url: String)
 # hide play-authenticate for now 
 GET     /                           controllers.Application.index
 GET     /restricted                 controllers.Application.restricted
-GET     /assets/javascript/routes.js    controllers.Application.jsRoutes
+GET     /assets/javascript/routes.js  controllers.Application.jsRoutes
 
 GET     /profile                    controllers.Application.profile
 
 GET     /login                      controllers.Application.login
 POST    /login                      controllers.Application.doLogin
+POST    /login-touch                controllers.Application.doLoginForTouch
 
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
