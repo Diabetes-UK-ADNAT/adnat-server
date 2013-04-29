@@ -9,11 +9,16 @@ import be.objectify.deadbolt.core.models.Subject;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUserIdentity;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.logging.Level;
+import play.Logger;
 
 public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Result beforeAuthCheck(final Http.Context context) {
+		setSessionFromAuthToken(context);
 		if (PlayAuthenticate.isLoggedIn(context.session())) {
 			// user is logged in
 			return null;
@@ -35,6 +40,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Subject getSubject(final Http.Context context) {
+		setSessionFromAuthToken(context);
 		final AuthUserIdentity u = PlayAuthenticate.getUser(context);
 		// Caching might be a good idea here
 		return User.findByAuthUserIdentity(u);
@@ -53,5 +59,31 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 		// been deactivated/deleted in between, it is possible that this gets
 		// shown. You might want to consider to sign the user out in this case.
 		return forbidden("Forbidden");
+	}
+
+	private void setSessionFromAuthToken(final Http.Context context) {
+		// FIXME use header to build session from header (if exists) check user login?
+//		Context.current.set(new Context(request, new HashMap <String, String>(), new HashMap <String, String>()));
+		try {
+			String xAuthToken = context.request().getHeader("X-Auth-Token");
+			Logger.debug("beforeAuthCheck:" + xAuthToken);
+			if (xAuthToken != null) {
+				String decoded = URLDecoder.decode(xAuthToken, "UTF-8");
+				Logger.debug("beforeAuthCheck:" + decoded);
+				//HashMap<String, String> newSession = new HashMap<String, String>();
+				String[] split = xAuthToken.split("-");
+				if (split.length > 1) {
+					String[] split2 = split[1].split("%00");
+					context.session().clear();
+					for (int i = 0; i < split2.length; i++) {
+						String[] keyVal = split2[i].split(":");
+						context.session().put(keyVal[0], keyVal[1]);
+					}
+				}
+			}
+		} catch (UnsupportedEncodingException ex) {
+			java.util.logging.Logger.getLogger(MyDeadboltHandler.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		Logger.debug(context.session().toString());
 	}
 }
