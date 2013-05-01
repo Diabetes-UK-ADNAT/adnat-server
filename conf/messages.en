@@ -112,11 +112,11 @@ playauthenticate.user.exists.title=User exists
 playauthenticate.user.exists.message=This user already exists.
 
 # play-authenticate: Navigation
-playauthenticate.navigation.profile=Profile
+playauthenticate.navigation.profile=Account
 playauthenticate.navigation.link_more=Link more providers
 playauthenticate.navigation.logout=Sign out
 playauthenticate.navigation.login=Log in
-playauthenticate.navigation.home=Home
+playauthenticate.navigation.home=Return to ADNAT
 playauthenticate.navigation.restricted=Restricted page
 playauthenticate.navigation.signup=Sign up
 
@@ -124,7 +124,7 @@ playauthenticate.navigation.signup=Sign up
 playauthenticate.handler.loginfirst=You need to log in first, to view ''{0}''
 
 # play-authenticate: Profile
-playauthenticate.profile.title=User Profile
+playauthenticate.profile.title=Account
 playauthenticate.profile.mail=Your name is {0} and your email address is {1}!
 playauthenticate.profile.unverified=unverified - click to verify
 playauthenticate.profile.verified=verified
