@@ -41,14 +41,15 @@
           @subjectPresentOr() {
           	@defining(Application.getLocalUser(session())) { user =>
 				<ul class="nav">
-                  <li class="@("active".when(nav == "profile"))"><a href="@routes.Application.profile()"><i class="icon-user"></i> @Messages("playauthenticate.navigation.profile")</a></li>
+                  <li class="@("active".when(nav=="profile"))"><a href="@routes.Application.profile()"><i class="icon-user"></i> @Messages("playauthenticate.navigation.profile")</a></li>
 				  <li class="divider"></li>
 				  <li><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">@Messages("playauthenticate.navigation.logout")</a></li>
 				</ul>
             }
           }{
 				<ul class="nav">
-					<li><a href="@routes.Application.login()">@Messages("playauthenticate.navigation.login")</a></li>
+					<li class="@("active".when(nav == "login"))"><a href="@routes.Application.login()">@Messages("playauthenticate.navigation.login")</a></li>
+
 				</ul>
 <!--				<ul class="nav">
 					<li><a href="@routes.Application.login()" class="btn btn-primary btn-mini @("disabled".when(nav == "login"))">@Messages("playauthenticate.navigation.login")</a></li>
