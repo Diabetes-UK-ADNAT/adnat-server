@@ -36,19 +36,19 @@
           <a class="brand" href="@routes.Application.index()">ADNAT Account Management</a>
 		  <div class="nav-pills">
             <ul class="nav">
-              <li><a href="@routes.Application.index()">@Messages("playauthenticate.navigation.home")</a></li>
+              <li><a href="@routes.Application.index()"><i class="icon-tasks"></i> @Messages("playauthenticate.navigation.home")</a></li>
             </ul>
           @subjectPresentOr() {
           	@defining(Application.getLocalUser(session())) { user =>
 				<ul class="nav">
                   <li class="@("active".when(nav=="profile"))"><a href="@routes.Application.profile()"><i class="icon-user"></i> @Messages("playauthenticate.navigation.profile")</a></li>
 				  <li class="divider"></li>
-				  <li><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()">@Messages("playauthenticate.navigation.logout")</a></li>
+				  <li><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()"><i class="icon-eject"></i> @Messages("playauthenticate.navigation.logout")</a></li>
 				</ul>
             }
           }{
 				<ul class="nav">
-					<li class="@("active".when(nav == "login"))"><a href="@routes.Application.login()">@Messages("playauthenticate.navigation.login")</a></li>
+					<li class="@("active".when(nav == "login"))"><a href="@routes.Application.login()"><i class="icon-user"></i> @Messages("playauthenticate.navigation.login")</a></li>
 
 				</ul>
 <!--				<ul class="nav">
