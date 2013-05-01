@@ -40,7 +40,7 @@
             </ul>
           @subjectPresentOr() {
           	@defining(Application.getLocalUser(session())) { user =>
-				<ul class="nav">
+				<ul class="nav  pull-right">
                   <li class="@("active".when(nav=="profile"))"><a href="@routes.Application.profile()"><i class="icon-user"></i> @Messages("playauthenticate.navigation.profile")</a></li>
 				  <li class="divider"></li>
 				  <li><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()"><i class="icon-eject"></i> @Messages("playauthenticate.navigation.logout")</a></li>
