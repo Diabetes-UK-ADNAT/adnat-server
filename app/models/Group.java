@@ -1,51 +1,39 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import org.bson.types.ObjectId;
-
-import play.Logger;
 import play.data.validation.Constraints.Required;
-
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
+import static models.BaseModel.ds;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity
-public class Group {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Group extends BaseModel {
 
-    @Id
-    public ObjectId id;
     @Required
-    public String groupName;
-    @play.data.format.Formats.DateTime(pattern = "yyyy-MM-dd")
-    public Date date;
-
-    public static List<Group> all() {
-        if (MorphiaObject.datastore != null) {
-            return MorphiaObject.datastore.find(Group.class).asList();
-        } else {
-            return new ArrayList<Group>();
-        }
+    public String name;
+    
+    public static Group find(String id) {
+        return ds.find(Group.class).field("_id").equal(new ObjectId(id)).get();
     }
 
-    public static void create(Group group) {
-        MorphiaObject.datastore.save(group);
+    public static List<Group> all() {
+        return allItems(Group.class);
+    }
+
+    public static void save(Group item) {
+        saveItem(item);
     }
 
     public static void delete(String idToDelete) {
-        Group toDelete = MorphiaObject.datastore.find(Group.class).field("_id").equal(new ObjectId(idToDelete)).get();
-        if (toDelete != null) {
-            Logger.info("toDelete: " + toDelete);
-            MorphiaObject.datastore.delete(toDelete);
-        } else {
-            Logger.debug("ID No Found: " + idToDelete);
-        }
+        deleteItem(Group.class, find(idToDelete));
     }
 
     @Override
     public String toString() {
-        return id + "," + groupName;
+        return super.toString()
+                + ","
+                + name;
     }
 }

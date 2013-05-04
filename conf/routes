@@ -18,6 +18,11 @@ POST	/v1/faqs            controllers.FaqController.save()
 GET     /v1/faqs/:id        controllers.FaqController.getById(id: String)
 DELETE	/v1/faqs/:id        controllers.FaqController.delete(id: String)
 
+GET     /v1/groups            controllers.GroupController.getAll()
+POST	/v1/groups            controllers.GroupController.save()
+GET     /v1/groups/:id        controllers.GroupController.getById(id: String)
+DELETE	/v1/groups/:id        controllers.GroupController.delete(id: String)
+
 GET     /v1/contents        controllers.ContentController.getAll()
 POST	/v1/contents        controllers.ContentController.save()
 GET     /v1/contents/:id    controllers.ContentController.getById(id: String)
