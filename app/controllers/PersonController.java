@@ -18,6 +18,11 @@ public class PersonController extends BaseController {
         Person person = Json.fromJson(json, Person.class);
         person.id = getObjectId(json);
         boolean create = person.id == null;
+		models.Group ng = new models.Group();
+		ng.name = "test group name from person controller";
+		models.Group.save(ng);
+		person.group = ng;
+		
         Person.save(person);
         if (create) {
             response().setHeader(LOCATION, "/v1/persons/" + person.id);
