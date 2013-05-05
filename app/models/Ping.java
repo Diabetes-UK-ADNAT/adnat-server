@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-@Entity
+@Entity(noClassnameStored=true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Ping extends BaseModel {
 

@@ -35,8 +35,8 @@ public class BaseController extends Controller {
     }
 
     protected static ObjectId getObjectId(JsonNode json) {
-        String uuid = json.findPath("uuid").getTextValue();
-        return uuid == null ? null : new ObjectId(uuid);
+        JsonNode uuid = json.get("uuid");
+        return uuid == null ? null : new ObjectId(uuid.getTextValue());
     }
 
     protected static JsonNode getJsonFromBody() {

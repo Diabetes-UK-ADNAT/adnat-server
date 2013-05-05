@@ -49,6 +49,16 @@ public class Global extends GlobalSettings {
         }
 
         MorphiaObject.morphia = new Morphia();
+        //MorphiaObject.morphia.mapPackage("models", true);
+		// fails even with ignore, so do all classes individually
+        MorphiaObject.morphia.map(models.Ping.class);
+        MorphiaObject.morphia.map(models.Person.class);
+        MorphiaObject.morphia.map(models.Group.class);
+        MorphiaObject.morphia.map(models.Assessment.class);
+        MorphiaObject.morphia.map(models.Content.class);
+        MorphiaObject.morphia.map(models.Faq.class);
+        MorphiaObject.morphia.map(models.ContactRequest.class);
+		//
         MorphiaObject.datastore = MorphiaObject.morphia.
                 createDatastore(MorphiaObject.mongo,
                 Play.application().configuration().getString("mongodb.name"));

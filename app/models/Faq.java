@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import static models.BaseModel.ds;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-@Entity
+@Entity(noClassnameStored=true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Faq extends BaseModel {
 

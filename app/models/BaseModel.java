@@ -59,7 +59,7 @@ public class BaseModel {
 		Logger.debug(item.toString());
 		item.updated = new Date();
 		if (item.id != null) {
-			ds.merge(item);
+			ds.save(item);
 		} else {
 			item.created = item.updated;
 			ds.save(item);
