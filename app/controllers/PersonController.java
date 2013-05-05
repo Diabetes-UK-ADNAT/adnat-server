@@ -28,6 +28,7 @@ public class PersonController extends BaseController {
 			person.group = ng;
 		} else {
 			person.group.id = new ObjectId(json.findPath("group").findPath("uuid").getTextValue());
+			models.Group.save(person.group);
 		}
 //////
 
