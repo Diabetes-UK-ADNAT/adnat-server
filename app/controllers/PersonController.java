@@ -17,21 +17,24 @@ public class PersonController extends BaseController {
 		Logger.debug("save");
 		JsonNode json = getJsonFromBody();
 		Logger.debug(json.toString());
+		// get person 
 		Person person = Json.fromJson(json, Person.class);
 		person.id = getObjectId(json);
 		boolean create = person.id == null;
-//////
-		if (person.group == null) {
+
+		// handle referenced objects
+		if (person.group == null) { //fixme bogus group example
 			models.Group ng = new models.Group();
-			ng.name = "test group name from person controller" + new java.util.Date().toString();
+			ng.name = "from.person.controller " + new java.util.Date().toString();
 			models.Group.save(ng);
 			person.group = ng;
 		} else {
 			person.group.id = new ObjectId(json.findPath("group").findPath("uuid").getTextValue());
 			models.Group.save(person.group);
 		}
-//////
-
+		//
+		// test remove relationship
+		// works to remove rel: person.group = null;
 
 		Logger.debug(person.toString());
 		if ( create ) {

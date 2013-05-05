@@ -5,11 +5,9 @@ import org.bson.types.ObjectId;
 import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.annotations.Transient;
 import java.util.ArrayList;
 import java.util.Date;
 import static models.BaseModel.ds;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @Entity(noClassnameStored=true)
@@ -25,14 +23,9 @@ public class Person extends BaseModel {
     public Date agreedToPrivacyPolicy;
     public List<String> roles = new ArrayList<String>();
     public List<String> groups = new ArrayList<String>();
-
-//	@Transient
-//	@JsonIgnore
 	@Reference
 	public Group group;
 	
-//	public String groupUuid;
-
     public static Person find(String id) {
         return ds.find(Person.class).field("_id").equal(new ObjectId(id)).get();
     }
