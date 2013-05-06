@@ -22,7 +22,6 @@ public class Person extends BaseModel {
 	public Date agreedToTermsAndConditions;
 	public Date agreedToPrivacyPolicy;
 	public List<String> roles = new ArrayList<String>();
-	public List<String> groups = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
 	public Group group;
 
