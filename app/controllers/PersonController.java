@@ -37,7 +37,7 @@ public class PersonController extends BaseController {
 		// works to remove rel: person.group = null;
 
 		Logger.debug(person.toString());
-		if ( create ) {
+		if (create) {
 			Person.save(person);
 		} else {
 			Person.find(person.getUUID());
@@ -63,7 +63,10 @@ public class PersonController extends BaseController {
 			@Group(Application.USER_ROLE))
 	public static Result getAll() {
 		Logger.debug("getAll");
-		return okJsonWithHeaders(Person.all());
+		String roleFilter = request().getQueryString("qRole");
+		String nameFilter = request().getQueryString("qName");
+		Logger.debug("getAll?qName="+nameFilter+"&qRole="+roleFilter);
+		return okJsonWithHeaders(Person.all(roleFilter,nameFilter));
 	}
 
 	public static Result getById(String id) {

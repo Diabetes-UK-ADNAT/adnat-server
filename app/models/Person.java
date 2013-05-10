@@ -5,6 +5,10 @@ import org.bson.types.ObjectId;
 import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.query.Criteria;
+import com.google.code.morphia.query.CriteriaContainerImpl;
+import com.google.code.morphia.query.Query;
+import com.mongodb.DBObject;
 import java.util.ArrayList;
 import java.util.Date;
 import static models.BaseModel.ds;
@@ -29,7 +33,14 @@ public class Person extends BaseModel {
 		return ds.find(Person.class).field("_id").equal(new ObjectId(id)).get();
 	}
 
-	public static List<Person> all() {
+	public static List<Person> all(String roleFilter, String nameFilter) {
+		//return ds.createQuery(Person.class).limit(2).asList();
+		if (nameFilter != null) {
+			Query q = ds.createQuery(Person.class);
+			q.field("name.firstNames").containsIgnoreCase(nameFilter);
+			return q.asList();
+		}
+		
 		return allItems(Person.class);
 	}
 
