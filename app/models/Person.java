@@ -40,6 +40,7 @@ public class Person extends BaseModel {
 						q.criteria("name.firstNames").startsWithIgnoreCase(t),
 						q.criteria("name.lastName").startsWithIgnoreCase(t));
 			}
+			q.limit(15);
 		}
 		if (roleFilter != null) {
 			q.field("roles").contains(roleFilter);
