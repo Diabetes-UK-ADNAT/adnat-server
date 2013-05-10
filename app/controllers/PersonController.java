@@ -2,6 +2,7 @@ package controllers;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+import java.util.Iterator;
 import models.Person;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;
@@ -32,6 +33,19 @@ public class PersonController extends BaseController {
 			person.group.id = new ObjectId(json.findPath("group").findPath("uuid").getTextValue());
 			models.Group.save(person.group);
 		}
+
+		// fixme two careTeam[] in json
+		// fixme picking up wrong uuid (group not care team)
+		// fixme map each collection uuid to person obj uuid
+		// does this replace entire collection (item deletes?)
+		// fixme need to map the json IDs to the java Person objs
+		//Iterator<JsonNode> careTeamMembers = json.findPath("careTeam").getElements();
+		String testUuid = json.findPath("careTeam").findPath("uuid").getTextValue();
+		for ( Person p : person.careTeam ) {
+			Logger.debug(p.toString());
+			p.id = new ObjectId(testUuid);//json.findPath("group").findPath("uuid").getTextValue());
+			Logger.debug(p.toString());
+		}
 		//
 		// test remove relationship
 		// works to remove rel: person.group = null;
@@ -40,6 +54,7 @@ public class PersonController extends BaseController {
 		if (create) {
 			Person.save(person);
 		} else {
+			// FIXME THIS SEEMS WRONG?:
 			Person.find(person.getUUID());
 			Person.save(person);
 

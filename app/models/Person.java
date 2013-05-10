@@ -25,6 +25,8 @@ public class Person extends BaseModel {
 	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
 	public Group group;
+	@Reference(ignoreMissing = true)
+	public List<Person> careTeam = new ArrayList<Person>();
 
 	public static Person find(String id) {
 		return ds.find(Person.class).field("_id").equal(new ObjectId(id)).get();
