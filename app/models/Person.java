@@ -5,10 +5,7 @@ import org.bson.types.ObjectId;
 import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.query.Criteria;
-import com.google.code.morphia.query.CriteriaContainerImpl;
 import com.google.code.morphia.query.Query;
-import com.mongodb.DBObject;
 import java.util.ArrayList;
 import java.util.Date;
 import static models.BaseModel.ds;
@@ -35,13 +32,16 @@ public class Person extends BaseModel {
 
 	public static List<Person> all(String roleFilter, String nameFilter) {
 		//return ds.createQuery(Person.class).limit(2).asList();
+		Query<Person> q = ds.createQuery(Person.class);
 		if (nameFilter != null) {
-			Query q = ds.createQuery(Person.class);
-			q.field("name.firstNames").containsIgnoreCase(nameFilter);
-			return q.asList();
+			q.or(
+					q.criteria("name.firstNames").containsIgnoreCase(nameFilter),
+					q.criteria("name.lastName").containsIgnoreCase(nameFilter));
 		}
-		
-		return allItems(Person.class);
+		if (roleFilter != null) {
+			q.field("roles").contains(roleFilter);
+		}
+		return q.asList();
 	}
 
 	public static void save(Person item) {
