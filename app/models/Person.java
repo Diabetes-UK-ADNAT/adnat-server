@@ -34,9 +34,12 @@ public class Person extends BaseModel {
 		//return ds.createQuery(Person.class).limit(2).asList();
 		Query<Person> q = ds.createQuery(Person.class);
 		if (nameFilter != null) {
-			q.or(
-					q.criteria("name.firstNames").containsIgnoreCase(nameFilter),
-					q.criteria("name.lastName").containsIgnoreCase(nameFilter));
+			String[] tokens = nameFilter.toLowerCase().replaceAll(",", "").split(" ");
+			for (String t : tokens) {
+				q.or(
+						q.criteria("name.firstNames").startsWithIgnoreCase(t),
+						q.criteria("name.lastName").startsWithIgnoreCase(t));
+			}
 		}
 		if (roleFilter != null) {
 			q.field("roles").contains(roleFilter);

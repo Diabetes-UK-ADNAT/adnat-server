@@ -65,8 +65,8 @@ public class PersonController extends BaseController {
 		Logger.debug("getAll");
 		String roleFilter = request().getQueryString("qRole");
 		String nameFilter = request().getQueryString("qName");
-		Logger.debug("getAll?qName="+nameFilter+"&qRole="+roleFilter);
-		return okJsonWithHeaders(Person.all(roleFilter,nameFilter));
+		Logger.debug("getAll?qName=" + nameFilter + "&qRole=" + roleFilter);
+		return okJsonWithHeaders(Person.all(roleFilter, nameFilter));
 	}
 
 	public static Result getById(String id) {
