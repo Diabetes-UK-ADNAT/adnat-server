@@ -37,7 +37,7 @@
           <a class="brand" href="@routes.Application.index()">ADNAT Account Management</a>
 		  <div class="nav-pills">
             <ul class="nav">
-              <li><a href="@routes.Application.index()"><i class="icon-tasks"></i> @Messages("playauthenticate.navigation.home")</a></li>
+				<li><a href="@routes.Application.index()"><img style="width:16px; height:16px; vertical-align: middle" src="@routes.Assets.at("img/favicon.png")"/> @Messages("playauthenticate.navigation.home")</a></li>
             </ul>
           @subjectPresentOr() {
           	@defining(Application.getLocalUser(session())) { user =>
