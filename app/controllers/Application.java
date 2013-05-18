@@ -31,6 +31,7 @@ import static play.mvc.Controller.request;
 import static play.mvc.Controller.response;
 
 import static play.mvc.Results.badRequest;
+import providers.MyLoginUsernamePasswordAuthUser;
 
 public class Application extends BaseController {
 
@@ -112,39 +113,33 @@ public class Application extends BaseController {
 	}
 
 	/**
-	 * Require valid app key and credentials 
-	 * @return userToken that is same as auth cookie values (token, type, userid) 
+	 * Require valid app key and credentials
+	 *
+	 * @return userToken that is same as auth cookie values (token, type, *
+	 * userid)
 	 */
 	public static Result doLoginForTouch() {
 		Logger.debug("doLogin");
-		HashMap auth = new HashMap();
-		auth.put("userToken", null);
-		auth.put("userName", null);
-
 		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM.bindFromRequest();
+		HashMap auth = getDefaultResponse();
 
-		String appKey = filledForm.field("appKey").value();
-		Logger.debug("appKey="+appKey);
-		if ( appKey == null || !appKey.equalsIgnoreCase("8C5F216E-6A3E-444B-8371-FC872A775112")) { 
+		if (!isAppKeyValid(filledForm, auth)) {
 			return okJsonWithHeaders(auth);
 		}
-		
+
 		String email = filledForm.field("email").value();
 		String password = filledForm.field("password").value();
-		Logger.debug("email="+email);
-		//
-		// authenticate
-		// set userToken with cookie value
-		if (password != null && password.equalsIgnoreCase("password")) { //FIXME REAL
-			String userToken = UUID.randomUUID().toString();
-			Logger.debug("userToken=" + userToken);
-			auth.put("userToken", userToken); //FIXME REAL
-			auth.put("userName", filledForm.field("email").value());//FIXME REAL
-			//return UsernamePasswordAuthProvider.handleLogin(ctx());
-			return okJsonWithHeaders(auth);
-		} else {
-			return okJsonWithHeaders(auth);
+		Logger.debug("email=" + email);
+
+		final MyLoginUsernamePasswordAuthUser authUser = new MyLoginUsernamePasswordAuthUser(password, email);
+		String authResult = MyUsernamePasswordAuthProvider.handleTouchLogin(authUser);
+		Logger.debug("authResult=" + authResult);
+
+		if (!authResult.startsWith("INVALID")) {
+			auth.put("userToken", authResult);
+			auth.put("userName", email);
 		}
+		return okJsonWithHeaders(auth);
 	}
 
 	public static Result doLogin() {
@@ -187,5 +182,18 @@ public class Application extends BaseController {
 
 	public static String formatTimestamp(final long t) {
 		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
+	}
+
+	private static boolean isAppKeyValid(final Form<MyLogin> filledForm, HashMap auth) {
+		String appKey = filledForm.field("appKey").value();
+		Logger.debug("appKey=" + appKey);
+		return appKey != null && appKey.equalsIgnoreCase("8C5F216E-6A3E-444B-8371-FC872A775112");
+	}
+
+	private static HashMap getDefaultResponse() {
+		HashMap auth = new HashMap();
+		auth.put("userToken", null);
+		auth.put("userName", null);
+		return auth;
 	}
 }

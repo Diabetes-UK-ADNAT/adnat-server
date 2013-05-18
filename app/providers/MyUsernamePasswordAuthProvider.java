@@ -29,15 +29,13 @@ import java.util.UUID;
 import static play.data.Form.form;
 
 public class MyUsernamePasswordAuthProvider
-		extends
-		UsernamePasswordAuthProvider<String, MyLoginUsernamePasswordAuthUser, MyUsernamePasswordAuthUser, MyUsernamePasswordAuthProvider.MyLogin, MyUsernamePasswordAuthProvider.MySignup> {
+		extends UsernamePasswordAuthProvider<String, MyLoginUsernamePasswordAuthUser, MyUsernamePasswordAuthUser, MyUsernamePasswordAuthProvider.MyLogin, MyUsernamePasswordAuthProvider.MySignup> {
 
 	private static final String SETTING_KEY_VERIFICATION_LINK_SECURE = SETTING_KEY_MAIL
 			+ "." + "verificationLink.secure";
 	private static final String SETTING_KEY_PASSWORD_RESET_LINK_SECURE = SETTING_KEY_MAIL
 			+ "." + "passwordResetLink.secure";
 	private static final String SETTING_KEY_LINK_LOGIN_AFTER_PASSWORD_RESET = "loginAfterPasswordReset";
-
 	private static final String EMAIL_TEMPLATE_FALLBACK_LANGUAGE = "en";
 
 	@Override
@@ -63,11 +61,9 @@ public class MyUsernamePasswordAuthProvider
 		public MyIdentity(final String email) {
 			this.email = email;
 		}
-
 		@Required
 		@Email
 		public String email;
-
 	}
 
 	public static class MyLogin extends MyIdentity
@@ -94,7 +90,6 @@ public class MyUsernamePasswordAuthProvider
 		@Required
 		@MinLength(5)
 		public String repeatPassword;
-
 		@Required
 		public String name;
 
@@ -106,7 +101,6 @@ public class MyUsernamePasswordAuthProvider
 			return null;
 		}
 	}
-
 	public static final Form<MySignup> SIGNUP_FORM = form(MySignup.class);
 	public static final Form<MyLogin> LOGIN_FORM = form(MyLogin.class);
 
@@ -143,6 +137,34 @@ public class MyUsernamePasswordAuthProvider
 		// return SignupResult.USER_CREATED;
 		// then the user gets logged in directly
 		return SignupResult.USER_CREATED_UNVERIFIED;
+	}
+
+	public static String handleTouchLogin(final MyLoginUsernamePasswordAuthUser authUser) {
+		final User u = User.findByUsernamePasswordIdentity(authUser);
+		if (u == null) {
+			return "INVALID:NOT_FOUND";
+		} else {
+			if (!u.emailValidated) {
+				return "INVALID:USER_UNVERIFIED";
+			} else {
+				for (final LinkedAccount acc : u.linkedAccounts) {
+					if (PROVIDER_KEY.equals(acc.providerKey)) {
+						if (authUser.checkPassword(acc.providerUserId,
+								authUser.getPassword())) {
+							// Password was correct
+							return "USER_LOGGED_IN /// FIXMEW CREATE TOKEN HERE";
+						} else {
+							// if you don't return here,
+							// you would allow the user to have
+							// multiple passwords defined
+							// usually we don't want this
+							return "INVALID:WRONG_PASSWORD";
+						}
+					}
+				}
+				return "INVALID:WRONG_PASSWORD";
+			}
+		}
 	}
 
 	@Override
@@ -197,7 +219,6 @@ public class MyUsernamePasswordAuthProvider
 		return new MyLoginUsernamePasswordAuthUser(login.getPassword(),
 				login.getEmail());
 	}
-	
 
 	@Override
 	protected MyLoginUsernamePasswordAuthUser transformAuthUser(final MyUsernamePasswordAuthUser authUser, final Context context) {
@@ -214,7 +235,7 @@ public class MyUsernamePasswordAuthProvider
 	protected String onLoginUserNotFound(final Context context) {
 		context.flash()
 				.put(controllers.Application.FLASH_ERROR_KEY,
-						Messages.get("playauthenticate.password.login.unknown_user_or_pw"));
+				Messages.get("playauthenticate.password.login.unknown_user_or_pw"));
 		return super.onLoginUserNotFound(context);
 	}
 
