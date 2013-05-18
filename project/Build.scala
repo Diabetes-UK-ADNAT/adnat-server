@@ -16,8 +16,10 @@ object ApplicationBuild extends Build {
     "com.google.code.morphia" % "morphia" % "0.99",
     "org.mongodb" % "mongo-java-driver" % "2.7.3",
     "com.google.code.morphia" % "morphia-logging-slf4j" % "0.99",
+	//mysql
     "mysql" % "mysql-connector-java" % "5.1.18",
-        
+	//mail
+	"com.typesafe" %% "play-plugins-mailer" % "2.1.0" , 
     // play authenticate
     "be.objectify"  %%  "deadbolt-java"     % "2.1-SNAPSHOT",
     "com.feth" %% "play-authenticate" % "0.2.5-SNAPSHOT"
