@@ -2,7 +2,6 @@ package models;
 
 import java.util.List;
 import org.bson.types.ObjectId;
-import play.data.validation.Constraints.Required;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.query.Query;
@@ -15,16 +14,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person extends BaseModel {
 
-	@Required
-	public Name name;
-	public Date dob;
-	@Required
-	public ContactInfo contactInfo;
-	public Date agreedToTermsAndConditions;
-	public Date agreedToPrivacyPolicy;
-	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
-	public Group group;
+	public Group site;
+	public Name name;
+	public Date agreedToInformationSheet;
+	public Date agreedToConsent;
+	public Date agreedToAssent;
+	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
 	public List<Person> careTeam = new ArrayList<Person>();
 

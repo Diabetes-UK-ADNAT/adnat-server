@@ -24,18 +24,18 @@ public class PersonController extends BaseController {
 		boolean create = person.id == null;
 
 		// handle referenced objects
-		if (person.group == null) { //fixme bogus group example
+		if (person.site == null) { //fixme bogus site example
 			models.Group ng = new models.Group();
 			ng.name = "from.person.controller " + new java.util.Date().toString();
 			models.Group.save(ng);
-			person.group = ng;
+			person.site = ng;
 		} else {
-			person.group.id = new ObjectId(json.findPath("group").findPath("uuid").getTextValue());
-			models.Group.save(person.group);
+			person.site.id = new ObjectId(json.findPath("site").findPath("uuid").getTextValue());
+			models.Group.save(person.site);
 		}
 
 		// fixme two careTeam[] in json
-		// fixme picking up wrong uuid (group not care team)
+		// fixme picking up wrong uuid (site not care team)
 		// fixme map each collection uuid to person obj uuid
 		// does this replace entire collection (item deletes?)
 		// fixme need to map the json IDs to the java Person objs
@@ -43,12 +43,12 @@ public class PersonController extends BaseController {
 		String testUuid = json.findPath("careTeam").findPath("uuid").getTextValue();
 		for ( Person p : person.careTeam ) {
 			Logger.debug(p.toString());
-			p.id = new ObjectId(testUuid);//json.findPath("group").findPath("uuid").getTextValue());
+			p.id = new ObjectId(testUuid);//json.findPath("site").findPath("uuid").getTextValue());
 			Logger.debug(p.toString());
 		}
 		//
 		// test remove relationship
-		// works to remove rel: person.group = null;
+		// works to remove rel: person.site = null;
 
 		Logger.debug(person.toString());
 		if (create) {
