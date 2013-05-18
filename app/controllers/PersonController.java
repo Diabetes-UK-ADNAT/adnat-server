@@ -1,8 +1,8 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
-import java.util.Iterator;
 import models.Person;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;
@@ -41,7 +41,7 @@ public class PersonController extends BaseController {
 		// fixme need to map the json IDs to the java Person objs
 		//Iterator<JsonNode> careTeamMembers = json.findPath("careTeam").getElements();
 		String testUuid = json.findPath("careTeam").findPath("uuid").getTextValue();
-		for ( Person p : person.careTeam ) {
+		for (Person p : person.careTeam) {
 			Logger.debug(p.toString());
 			p.id = new ObjectId(testUuid);//json.findPath("site").findPath("uuid").getTextValue());
 			Logger.debug(p.toString());
@@ -74,8 +74,7 @@ public class PersonController extends BaseController {
 		return okWithHeaders();
 	}
 
-	@Restrict(
-			@Group(Application.USER_ROLE))
+	@Restrict(@Group(Application.USER_ROLE))
 	public static Result getAll() {
 		Logger.debug("getAll");
 		String roleFilter = request().getQueryString("qRole");

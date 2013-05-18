@@ -6,6 +6,8 @@ import play.mvc.Result;
 import be.objectify.deadbolt.java.AbstractDeadboltHandler;
 import be.objectify.deadbolt.java.DynamicResourceHandler;
 import be.objectify.deadbolt.core.models.Subject;
+import be.objectify.deadbolt.java.AbstractDynamicResourceHandler;
+import be.objectify.deadbolt.java.DeadboltHandler;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUserIdentity;
@@ -18,20 +20,21 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Result beforeAuthCheck(final Http.Context context) {
+		String xAppKey = context.request().getHeader("X-App-Key");
+		Logger.debug("appKey=" + xAppKey);
 		setSessionFromAuthToken(context);
-		if (PlayAuthenticate.isLoggedIn(context.session())) {
+		if (xAppKey != null
+				&& xAppKey.equals("13B6EFE5-63EE-4F1C-A486-76B24AAE1704")
+				){
 			// user is logged in
 			return null;
 		} else {
 			// user is not logged in
-
 			// call this if you want to redirect your visitor to the page that
 			// was requested before sending him to the login page
 			// if you don't call this, the user will get redirected to the page
 			// defined by your resolver
-			final String originalUrl = PlayAuthenticate
-					.storeOriginalUrl(context);
-
+			final String originalUrl = PlayAuthenticate.storeOriginalUrl(context);
 			context.flash().put("error",
 					"You need to log in first, to view '" + originalUrl + "'");
 			return redirect(PlayAuthenticate.getResolver().login());
@@ -40,7 +43,6 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Subject getSubject(final Http.Context context) {
-		setSessionFromAuthToken(context);
 		final AuthUserIdentity u = PlayAuthenticate.getUser(context);
 		// Caching might be a good idea here
 		return User.findByAuthUserIdentity(u);
@@ -49,7 +51,18 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 	@Override
 	public DynamicResourceHandler getDynamicResourceHandler(
 			final Http.Context context) {
-		return null;
+		return new AbstractDynamicResourceHandler() {
+			@Override
+			public boolean isAllowed(String name,
+					String meta,
+					DeadboltHandler deadboltHandler,
+					Http.Context context) {
+
+				String xAppKey = context.request().getHeader("X-App-Key");
+				Logger.debug("dynamic=" + xAppKey);
+				return xAppKey != null && xAppKey.equals("13B6EFE5-63EE-4F1C-A486-76B24AAE1704");
+			}
+		};
 	}
 
 	@Override
@@ -62,8 +75,6 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 	}
 
 	private void setSessionFromAuthToken(final Http.Context context) {
-		// FIXME use header to build session from header (if exists) check user login?
-//		Context.current.set(new Context(request, new HashMap <String, String>(), new HashMap <String, String>()));
 		try {
 			String xAuthToken = context.request().getHeader("X-Auth-Token");
 			Logger.debug("beforeAuthCheck:" + xAuthToken);

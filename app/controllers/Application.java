@@ -25,9 +25,6 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 import java.util.HashMap;
-import java.util.UUID;
-import org.codehaus.jackson.JsonNode;
-import static play.mvc.Controller.request;
 import static play.mvc.Controller.response;
 
 import static play.mvc.Results.badRequest;
@@ -99,19 +96,6 @@ public class Application extends BaseController {
 		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));
 	}
 
-	public static Result doLoginForJson() {
-		HashMap auth = new HashMap();
-		Logger.debug("doLogin");
-		Logger.debug(request().body().toString());
-		JsonNode json = getJsonFromBody();
-		Logger.debug(json.toString());
-		String userToken = UUID.randomUUID().toString();
-		Logger.debug("userToken=" + userToken);
-		auth.put("userToken", userToken); //FIXME REAL
-		auth.put("userName", "xyz");//filledForm.field("email").value());//FIXME REAL
-		return okJsonWithHeaders(auth);
-	}
-
 	/**
 	 * Require valid app key and credentials
 	 *
@@ -123,7 +107,7 @@ public class Application extends BaseController {
 		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM.bindFromRequest();
 		HashMap auth = getDefaultResponse();
 
-		if (!isAppKeyValid(filledForm, auth)) {
+		if (!isAppKeyValid(filledForm)) {
 			return okJsonWithHeaders(auth);
 		}
 
@@ -184,7 +168,7 @@ public class Application extends BaseController {
 		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
 	}
 
-	private static boolean isAppKeyValid(final Form<MyLogin> filledForm, HashMap auth) {
+	private static boolean isAppKeyValid(final Form<MyLogin> filledForm) {
 		String appKey = filledForm.field("appKey").value();
 		Logger.debug("appKey=" + appKey);
 		return appKey != null && appKey.equalsIgnoreCase("8C5F216E-6A3E-444B-8371-FC872A775112");
