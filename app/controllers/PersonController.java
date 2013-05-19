@@ -2,7 +2,6 @@ package controllers;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
-import com.avaje.ebean.Ebean;
 import java.util.ArrayList;
 import models.Person;
 import models.auth.SecurityRole;
@@ -61,7 +60,7 @@ public class PersonController extends BaseController {
 
 		//PlayAuthenticate.storeUser(session(), authUser);
 		MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
-		signup.email = "ericmlink3@gmail.com";//person.""
+		signup.email = "ericmlink3y@gmail.com";//person.""
 		signup.password = "hello2";
 		signup.repeatPassword = "hello2";
 		signup.name = signup.email;
@@ -70,7 +69,7 @@ public class PersonController extends BaseController {
 		User u = User.findByEmail(signup.email);
 		if (u != null) {
 			u.deleteManyToManyAssociations("roles");
-			for (String role : person.roles ) {
+			for (String role : person.roles) {
 				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
 			}
 			u.saveManyToManyAssociations("roles");
@@ -78,14 +77,17 @@ public class PersonController extends BaseController {
 			@SuppressWarnings("unused")
 			final User newUser = User.create(user);
 			newUser.roles = new ArrayList<SecurityRole>();
-			for (String role : person.roles ) {
+			for (String role : person.roles) {
 				newUser.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
 			}
 			newUser.save();
+			newUser.saveManyToManyAssociations("roles");
 			if (newUser.roles.contains(SecurityRole.findByRoleName("patient"))) {
 				User.verify(newUser);
 			} else {
 				// invite / verify email address
+				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider.getProvider();
+				provider.sendVerifyEmailMailingAfterSignup(newUser, ctx());
 			}
 		}
 		////
