@@ -1,0 +1,9 @@
+@(patient: String, uri: String, notificationDate: java.util.Date)
+@patient submitted an ADNAT Assessment on @notificationDate.
+
+View ADNAT Assessment:
+@uri
+
+Cheers,
+
+ADNAT Support Team
