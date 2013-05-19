@@ -1,15 +1,20 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Dynamic;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+import com.avaje.ebean.Ebean;
+import java.util.ArrayList;
 import models.Person;
+import models.auth.SecurityRole;
+import models.auth.User;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import providers.MyUsernamePasswordAuthProvider;
+import providers.MyUsernamePasswordAuthUser;
 
 public class PersonController extends BaseController {
 
@@ -50,6 +55,42 @@ public class PersonController extends BaseController {
 		// test remove relationship
 		// works to remove rel: person.site = null;
 
+// pwd != null && == then set user
+// if not found create, with password
+//// email update requires new password; or save original email so can update as it's the key
+
+		//PlayAuthenticate.storeUser(session(), authUser);
+		MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
+		signup.email = "ericmlink3@gmail.com";//person.""
+		signup.password = "hello2";
+		signup.repeatPassword = "hello2";
+		signup.name = signup.email;
+		MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
+		//User u = User.findByUsernamePasswordIdentity(user);
+		User u = User.findByEmail(signup.email);
+		if (u != null) {
+			u.deleteManyToManyAssociations("roles");
+			for (String role : person.roles ) {
+				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
+			}
+			u.saveManyToManyAssociations("roles");
+		} else {
+			@SuppressWarnings("unused")
+			final User newUser = User.create(user);
+			newUser.roles = new ArrayList<SecurityRole>();
+			for (String role : person.roles ) {
+				newUser.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
+			}
+			newUser.save();
+			if (newUser.roles.contains(SecurityRole.findByRoleName("patient"))) {
+				User.verify(newUser);
+			} else {
+				// invite / verify email address
+			}
+		}
+		////
+		// FIXME ref to auth user in Person
+
 		Logger.debug(person.toString());
 		if (create) {
 			Person.save(person);
@@ -74,7 +115,8 @@ public class PersonController extends BaseController {
 		return okWithHeaders();
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(
+			@Group(Application.USER_ROLE))
 	public static Result getAll() {
 		Logger.debug("getAll");
 		String roleFilter = request().getQueryString("qRole");

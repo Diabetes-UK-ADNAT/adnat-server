@@ -20,12 +20,19 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Result beforeAuthCheck(final Http.Context context) {
+		setSessionFromAuthToken(context);
+
+		// uris w/o app keys
+		if (context.request().uri().equals("/profile")
+				|| context.request().uri().equals("/accounts/password/change")) {
+			return null;
+		};
+
+		// app keys for all other uris
 		String xAppKey = context.request().getHeader("X-App-Key");
 		Logger.debug("appKey=" + xAppKey);
-		setSessionFromAuthToken(context);
 		if (xAppKey != null
-				&& xAppKey.equals("13B6EFE5-63EE-4F1C-A486-76B24AAE1704")
-				){
+				&& xAppKey.equals("13B6EFE5-63EE-4F1C-A486-76B24AAE1704")) {
 			// user is logged in
 			return null;
 		} else {
@@ -35,8 +42,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 			// if you don't call this, the user will get redirected to the page
 			// defined by your resolver
 			final String originalUrl = PlayAuthenticate.storeOriginalUrl(context);
-			context.flash().put("error",
-					"You need to log in first, to view '" + originalUrl + "'");
+			context.flash().put("error", "You need to log in first, to view '" + originalUrl + "'");
 			return redirect(PlayAuthenticate.getResolver().login());
 		}
 	}
