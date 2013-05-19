@@ -25,8 +25,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import models.auth.SecurityRole;
 
 import static play.data.Form.form;
+import static play.mvc.Results.redirect;
 
 public class MyUsernamePasswordAuthProvider
 		extends UsernamePasswordAuthProvider<String, MyLoginUsernamePasswordAuthUser, MyUsernamePasswordAuthUser, MyUsernamePasswordAuthProvider.MyLogin, MyUsernamePasswordAuthProvider.MySignup> {
@@ -174,6 +176,10 @@ public class MyUsernamePasswordAuthProvider
 		if (u == null) {
 			return LoginResult.NOT_FOUND;
 		} else {
+			if (u.roles.size() == 1 && u.roles.contains(SecurityRole.findByRoleName("patient"))) {
+				// no website login allowed for Patients
+				return LoginResult.NOT_FOUND;
+			}
 			if (!u.emailValidated) {
 				return LoginResult.USER_UNVERIFIED;
 			} else {
