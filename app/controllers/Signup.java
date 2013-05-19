@@ -14,8 +14,11 @@ import providers.MyUsernamePasswordAuthUser;
 import views.html.account.signup.*;
 
 import com.feth.play.module.pa.PlayAuthenticate;
+import models.auth.SecurityRole;
+import play.Logger;
 
 import static play.data.Form.form;
+import static play.mvc.Results.redirect;
 
 public class Signup extends Controller {
 
@@ -27,7 +30,6 @@ public class Signup extends Controller {
 		public PasswordReset(final String token) {
 			this.token = token;
 		}
-
 		public String token;
 
 		public String getToken() {
@@ -38,14 +40,12 @@ public class Signup extends Controller {
 			this.token = token;
 		}
 	}
-
 	private static final Form<PasswordReset> PASSWORD_RESET_FORM = form(PasswordReset.class);
 
 	public static Result unverified() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		return ok(unverified.render());
 	}
-
 	private static final Form<MyIdentity> FORGOT_PASSWORD_FORM = form(MyIdentity.class);
 
 	public static Result forgotPassword(final String email) {
@@ -76,11 +76,15 @@ public class Signup extends Controller {
 			// be true - that's protecting our user privacy.
 			flash(Application.FLASH_MESSAGE_KEY,
 					Messages.get(
-							"playauthenticate.reset_password.message.instructions_sent",
-							email));
+					"playauthenticate.reset_password.message.instructions_sent",
+					email));
 
 			final User user = User.findByEmail(email);
 			if (user != null) {
+				if (user.roles.size() == 1 && user.roles.contains(SecurityRole.findByRoleName("patient"))) {
+					// no reset if patient is only role
+					return redirect(routes.Application.index());
+				}
 				// yep, we have a user with this email that is active - we do
 				// not know if the user owning that account has requested this
 				// reset, though.
@@ -112,7 +116,7 @@ public class Signup extends Controller {
 
 	/**
 	 * Returns a token object if valid, null if not
-	 * 
+	 *
 	 * @param token
 	 * @param type
 	 * @return
