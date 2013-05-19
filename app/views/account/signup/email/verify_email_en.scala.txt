@@ -1,10 +1,13 @@
-@(verificationUrl: String, token: String, name: String, email: String)Howdy @name,
+@(url: String, token: String, name: String, email: String)Hello @name,
 
 
-You recently signed up for PlayAuthenticate.
+You or someone else requested a password reset for your account.
+If that was not you or your intention, just ignore this email, your account is secure.
 
-To activate your account, follow this link now:
-@verificationUrl
+
+If you wish to reset your password, all you need to do is follow this link to reset your password:
+@url
+
 
 Cheers,
-The PlayAuthenticate Team
+ADNAT Support Team

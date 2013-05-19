@@ -34,11 +34,13 @@ public class ContactRequestController extends BaseController {
 		mail.setSubject("ADNAT Contact Request");
 		mail.addRecipient("ADNAT Support <support@myadnat.co.uk>", "support@myadnat.co.uk");
 		mail.addFrom("ADNAT Support <support@myadnat.co.uk>");
-		String txt = "ADNAT Contact Request " + new Date();
+
+
+		Date requestDate = new Date();
 		String uri = "https://" + request().host() + "/v1/contactrequests/" + contactRequest.getUUID(); //fixme web url
-		mail.send(
-				txt + "\n" + uri,
-				"<html>" + txt + "<p><a href=\"" + uri + "\">View Contact Request</a></html>");
+		String html = views.html.email.email_contact.render(uri, requestDate).body();
+		String txt = views.txt.email.email_contact.render(uri, requestDate).body();
+		mail.send(txt, html);
 	}
 
 	public static Result delete(String id) {

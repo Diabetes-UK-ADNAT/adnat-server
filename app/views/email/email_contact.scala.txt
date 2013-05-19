@@ -1,0 +1,7 @@
+@(uri: String, requestDate: java.util.Date)
+ADNAT Contact Request received @requestDate
+	
+View Contact Request:
+@uri
+
+

@@ -1,8 +1,9 @@
-@(verificationUrl: String, token: String, name: String, email: String)Howdy @name, 
+@(verificationUrl: String, token: String, name: String, email: String)Hello @name, 
 
 
-To verify your e-mail address, follow this link now:
+Thank you for signing up for ADNAT (http://myadnat.co.uk).
+To verify your e-mail address, please click this link now:
 @verificationUrl
 
 Cheers,
-The PlayAuthenticate Team
+ADNAT Support Team
