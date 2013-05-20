@@ -74,20 +74,19 @@ public class PersonController extends BaseController {
 			}
 			u.saveManyToManyAssociations("roles");
 		} else {
-			@SuppressWarnings("unused")
-			final User newUser = User.create(user);
-			newUser.roles = new ArrayList<SecurityRole>();
+			u  = User.create(user);
+			u.roles = new ArrayList<SecurityRole>();
 			for (String role : person.roles) {
-				newUser.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
+				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
 			}
-			newUser.save();
-			newUser.saveManyToManyAssociations("roles");
-			if (newUser.roles.contains(SecurityRole.findByRoleName("patient"))) {
-				User.verify(newUser);
+			u.save();
+			u.saveManyToManyAssociations("roles");
+			if (u.roles.contains(SecurityRole.findByRoleName("patient"))) {
+				User.verify(u);
 			} else {
 				// invite / verify email address
 				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider.getProvider();
-				provider.sendVerifyEmailMailingAfterSignup(newUser, ctx());
+				provider.sendVerifyEmailMailingAfterSignup(u, ctx());
 			}
 		}
 		////
@@ -95,6 +94,7 @@ public class PersonController extends BaseController {
 
 		Logger.debug(person.toString());
 		if (create) {
+			person.accountUuid = u.uuid;
 			Person.save(person);
 		} else {
 			// FIXME THIS SEEMS WRONG?:
