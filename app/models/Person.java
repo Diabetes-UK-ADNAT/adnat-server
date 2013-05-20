@@ -14,7 +14,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person extends BaseModel {
 
-
 	public String name;
 	public String accountUuid; //link to auth User.uuid
 	public List<String> roles = new ArrayList<String>();
@@ -25,21 +24,24 @@ public class Person extends BaseModel {
 	public Date agreedToAssent;
 	@Reference(ignoreMissing = true)
 	public List<Person> careTeam = new ArrayList<Person>();
+	public Activity activity = new Activity();
 
 	public static Person find(String id) {
 		return ds.find(Person.class).field("_id").equal(new ObjectId(id)).get();
 	}
 
 	public static List<Person> all(String roleFilter, String nameFilter) {
-		//return ds.createQuery(Person.class).limit(2).asList();
 		Query<Person> q = ds.createQuery(Person.class);
+		q.limit(100); //default max limit
+
 		if (nameFilter != null) {
-			String[] tokens = nameFilter.toLowerCase().replaceAll(",", "").split(" ");
+			String[] tokens = nameFilter.replaceAll(",", "").split(" ");
 			for (String t : tokens) {
 				q.or(
 						//q.criteria("name.firstNames").startsWithIgnoreCase(t),
 						//q.criteria("name.lastName").startsWithIgnoreCase(t));
-						q.criteria("name").startsWithIgnoreCase(t));
+						q.criteria("name").containsIgnoreCase(t),
+						q.criteria("email").containsIgnoreCase(t));
 			}
 			q.limit(15);
 		}
@@ -48,16 +50,23 @@ public class Person extends BaseModel {
 		}
 		return q.asList();
 	}
+
 	public static Person findByAccount(String uuid) {
 		Query<Person> q = ds.createQuery(Person.class);
 		q.criteria("accountUuid").equals(uuid);
 		return q.get();
 	}
+
 	public static void save(Person item) {
 		saveItem(item);
 	}
 
 	public static void delete(String idToDelete) {
 		deleteItem(Person.class, find(idToDelete));
+	}
+
+	public static class Activity {
+
+		public Date lastAssessmentPosted;
 	}
 }

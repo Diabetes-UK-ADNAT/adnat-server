@@ -25,6 +25,8 @@ public class AssessmentController extends BaseController {
 		// also, tokens set by touch login only for now
 		User u = User.findByLastLoginToken(assessment.userToken);
 		assessment.person = Person.findByAccount(u.uuid);
+		assessment.person.activity.lastAssessmentPosted = new Date();
+		Person.save(assessment.person);
 		Logger.debug(assessment.person.toString());
 		boolean create = assessment.id == null;
 		Assessment.save(assessment);
@@ -64,8 +66,9 @@ public class AssessmentController extends BaseController {
 		mail.addFrom("ADNAT Support <support@myadnat.co.uk>");
 
 		Date notificationDate = new Date();
-		String uri = "https://" + request().host() + "/v1/assessments/" + assessment.getUUID(); //fixme web url
-		String patient = "patient name"; //fixme patient email address here
+//FIXME correct web host
+		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID(); //fixme web url
+		String patient = assessment.person.name; 
 		String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
 		String txt = views.txt.email.email_assessment_notification.render(patient, uri, notificationDate).body();
 		mail.send(txt, html);
