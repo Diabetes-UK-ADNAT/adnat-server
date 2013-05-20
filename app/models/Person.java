@@ -13,6 +13,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @Entity(noClassnameStored = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person extends BaseModel {
+
+
 	public String name;
 	public String accountUuid; //link to auth User.uuid
 	public List<String> roles = new ArrayList<String>();
@@ -35,8 +37,9 @@ public class Person extends BaseModel {
 			String[] tokens = nameFilter.toLowerCase().replaceAll(",", "").split(" ");
 			for (String t : tokens) {
 				q.or(
-						q.criteria("name.firstNames").startsWithIgnoreCase(t),
-						q.criteria("name.lastName").startsWithIgnoreCase(t));
+						//q.criteria("name.firstNames").startsWithIgnoreCase(t),
+						//q.criteria("name.lastName").startsWithIgnoreCase(t));
+						q.criteria("name").startsWithIgnoreCase(t));
 			}
 			q.limit(15);
 		}
@@ -45,7 +48,11 @@ public class Person extends BaseModel {
 		}
 		return q.asList();
 	}
-
+	public static Person findByAccount(String uuid) {
+		Query<Person> q = ds.createQuery(Person.class);
+		q.criteria("accountUuid").equals(uuid);
+		return q.get();
+	}
 	public static void save(Person item) {
 		saveItem(item);
 	}

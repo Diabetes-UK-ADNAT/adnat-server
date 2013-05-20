@@ -26,52 +26,39 @@ import java.util.*;
 @Entity
 @Table(name = "users")
 public class User extends Model implements Subject {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	public Long id;
-
 	public String uuid;
-	
 	@Email
 	// if you make this unique, keep in mind that users *must* merge/link their
 	// accounts then on signup with additional providers
 	// @Column(unique = true)
 	public String email;
-
 	public String name;
-	
 	public String firstName;
-	
 	public String lastName;
-
 	@Formats.DateTime(pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date lastLogin;
 	public String lastLoginFrom;
 	public String lastLoginToken;
-
 	public boolean active;
-
 	public boolean emailValidated;
-
 	@ManyToMany
 	public List<SecurityRole> roles;
-
 	@OneToMany(cascade = CascadeType.ALL)
 	public List<LinkedAccount> linkedAccounts;
-
 	@ManyToMany
 	public List<UserPermission> permissions;
-
 	public static final Finder<Long, User> find = new Finder<Long, User>(
 			Long.class, User.class);
 
 	@Override
-	public String getIdentifier()
-	{
+	public String getIdentifier() {
 		return Long.toString(id);
 	}
 
@@ -133,7 +120,7 @@ public class User extends Model implements Subject {
 
 		// deactivate the merged user that got added to this one
 		otherUser.active = false;
-		Ebean.save(Arrays.asList(new User[] { otherUser, this }));
+		Ebean.save(Arrays.asList(new User[]{otherUser, this}));
 	}
 
 	public static User create(final AuthUser authUser) {
@@ -142,7 +129,7 @@ public class User extends Model implements Subject {
 				.findByRoleName(controllers.Application.USER_ROLE));
 		// user.permissions = new ArrayList<UserPermission>();
 		// user.permissions.add(UserPermission.findByValue("printers.edit"));
-		user.uuid = UUID.randomUUID().toString(); 
+		user.uuid = UUID.randomUUID().toString();
 
 		user.active = true;
 		user.lastLogin = new Date();
@@ -165,17 +152,17 @@ public class User extends Model implements Subject {
 				user.name = name;
 			}
 		}
-		
+
 		if (authUser instanceof FirstLastNameIdentity) {
-		  final FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
-		  final String firstName = identity.getFirstName();
-		  final String lastName = identity.getLastName();
-		  if (firstName != null) {
-		    user.firstName = firstName;
-		  }
-		  if (lastName != null) {
-		    user.lastName = lastName;
-		  }
+			final FirstLastNameIdentity identity = (FirstLastNameIdentity) authUser;
+			final String firstName = identity.getFirstName();
+			final String lastName = identity.getLastName();
+			if (firstName != null) {
+				user.firstName = firstName;
+			}
+			if (lastName != null) {
+				user.lastName = lastName;
+			}
 		}
 
 		user.save();
@@ -213,6 +200,10 @@ public class User extends Model implements Subject {
 
 	public static User findByEmail(final String email) {
 		return getEmailUserFind(email).findUnique();
+	}
+
+	public static User findByLastLoginToken(final String lastLoginToken) {
+		return find.where().eq("active", true).eq("lastLoginToken", lastLoginToken).findUnique();
 	}
 
 	private static ExpressionList<User> getEmailUserFind(final String email) {
