@@ -13,14 +13,14 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @Entity(noClassnameStored = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person extends BaseModel {
-
+	public String name;
+	public String accountUuid; //link to auth User.uuid
+	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
 	public Group site;
-	public Name name;
 	public Date agreedToInformationSheet;
 	public Date agreedToConsent;
 	public Date agreedToAssent;
-	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
 	public List<Person> careTeam = new ArrayList<Person>();
 
