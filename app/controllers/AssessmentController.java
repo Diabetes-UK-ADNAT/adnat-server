@@ -18,6 +18,11 @@ public class AssessmentController extends BaseController {
 		JsonNode json = getJsonFromBody();
 		Assessment assessment = Json.fromJson(json, Assessment.class);
 		assessment.id = getObjectId(json);
+		Logger.debug(assessment.userToken);
+		// FIXME lookup u.lastLoginToken << only works because they can't login to site; need list of tokens for multi device etc.
+		// find u by email userid id and verify token is == 
+		// find person.accountUuid == u.uuid 
+		// save person reference with assessment
 		boolean create = assessment.id == null;
 		Assessment.save(assessment);
 		if (create) {

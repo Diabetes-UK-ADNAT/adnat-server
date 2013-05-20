@@ -34,6 +34,8 @@ create table users (
   first_name                varchar(255),
   last_name                 varchar(255),
   last_login                datetime,
+  last_login_from			varchar(255),
+  last_login_token          varchar(255),
   active                    tinyint(1) default 0,
   email_validated           tinyint(1) default 0,
   constraint pk_users primary key (id))

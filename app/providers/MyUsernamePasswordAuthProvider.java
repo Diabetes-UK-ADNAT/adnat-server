@@ -23,12 +23,12 @@ import play.mvc.Http.Context;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import models.auth.SecurityRole;
 
 import static play.data.Form.form;
-import static play.mvc.Results.redirect;
 
 public class MyUsernamePasswordAuthProvider
 		extends UsernamePasswordAuthProvider<String, MyLoginUsernamePasswordAuthUser, MyUsernamePasswordAuthUser, MyUsernamePasswordAuthProvider.MyLogin, MyUsernamePasswordAuthProvider.MySignup> {
@@ -148,7 +148,7 @@ public class MyUsernamePasswordAuthProvider
 		return SignupResult.USER_CREATED_UNVERIFIED;
 	}
 
-	public static String handleTouchLogin(final MyLoginUsernamePasswordAuthUser authUser) {
+	public static String handleTouchLogin(final MyLoginUsernamePasswordAuthUser authUser, final String appKey) {
 		final User u = User.findByUsernamePasswordIdentity(authUser);
 		if (u == null) {
 			return "INVALID:NOT_FOUND";
@@ -161,7 +161,11 @@ public class MyUsernamePasswordAuthProvider
 						if (authUser.checkPassword(acc.providerUserId,
 								authUser.getPassword())) {
 							// Password was correct
-							return "USER_LOGGED_IN /// FIXMEW CREATE TOKEN HERE";
+							u.lastLogin = new Date();
+							u.lastLoginToken = UUID.randomUUID().toString();
+							u.lastLoginFrom = appKey; 
+							u.save();
+							return u.lastLoginToken;
 						} else {
 							// if you don't return here,
 							// you would allow the user to have

@@ -105,7 +105,9 @@ public class Application extends BaseController {
 		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM.bindFromRequest();
 		HashMap auth = getDefaultResponse();
 
-		if (!isAppKeyValid(filledForm)) {
+		String appKey = filledForm.field("appKey").value();
+		Logger.debug("appKey=" + appKey);
+		if ( appKey == null || !appKey.equalsIgnoreCase("8C5F216E-6A3E-444B-8371-FC872A775112") ) {
 			return okJsonWithHeaders(auth);
 		}
 
@@ -114,7 +116,7 @@ public class Application extends BaseController {
 		Logger.debug("email=" + email);
 
 		final MyLoginUsernamePasswordAuthUser authUser = new MyLoginUsernamePasswordAuthUser(password, email);
-		String authResult = MyUsernamePasswordAuthProvider.handleTouchLogin(authUser);
+		String authResult = MyUsernamePasswordAuthProvider.handleTouchLogin(authUser,appKey);
 		Logger.debug("authResult=" + authResult);
 
 		if (!authResult.startsWith("INVALID")) {
@@ -166,11 +168,6 @@ public class Application extends BaseController {
 		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
 	}
 
-	private static boolean isAppKeyValid(final Form<MyLogin> filledForm) {
-		String appKey = filledForm.field("appKey").value();
-		Logger.debug("appKey=" + appKey);
-		return appKey != null && appKey.equalsIgnoreCase("8C5F216E-6A3E-444B-8371-FC872A775112");
-	}
 
 	private static HashMap getDefaultResponse() {
 		HashMap auth = new HashMap();
