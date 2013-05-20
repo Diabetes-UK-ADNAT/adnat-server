@@ -20,6 +20,7 @@ import providers.MyUsernamePasswordAuthProvider.MySignup;
 import views.html.*;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
@@ -34,7 +35,12 @@ public class Application extends BaseController {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "error";
+	//fixme refactor to proper location
 	public static final String USER_ROLE = "user";
+	public static final String USER_ROLE_PRACTITIONER = "practitioner";
+	public static final String USER_ROLE_PATIENT = "patient";
+	public static final String USER_ROLE_SITE_ADMIN = "site admin";
+	public static final String USER_ROLE_ADMIN = "admin";
 
 	public static Result options(String url) {
 		Logger.debug("options" + url);
@@ -78,15 +84,7 @@ public class Application extends BaseController {
 		return localUser;
 	}
 
-	@Restrict(
-			@Group(Application.USER_ROLE))
-	public static Result restricted() {
-		final User localUser = getLocalUser(session());
-		return ok(restricted.render(localUser));
-	}
-
-	@Restrict(
-			@Group(Application.USER_ROLE))
+	@SubjectPresent
 	public static Result profile() {
 		final User localUser = getLocalUser(session());
 		return ok(profile.render(localUser));

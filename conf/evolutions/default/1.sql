@@ -1,6 +1,3 @@
-# --- Created by Ebean DDL
-# To stop Ebean DDL generation, remove this comment and start using Evolutions
-
 # --- !Ups
 
 create table linked_account (
@@ -31,6 +28,7 @@ create table token_action (
 
 create table users (
   id                        bigint auto_increment not null,
+  uuid                      varchar(255),
   email                     varchar(255),
   name                      varchar(255),
   first_name                varchar(255),
@@ -73,6 +71,15 @@ alter table users_security_role add constraint fk_users_security_role_security_r
 alter table users_user_permission add constraint fk_users_user_permission_users_01 foreign key (users_id) references users (id) on delete restrict on update restrict;
 
 alter table users_user_permission add constraint fk_users_user_permission_user_permission_02 foreign key (user_permission_id) references user_permission (id) on delete restrict on update restrict;
+
+INSERT INTO `security_role` (`id`, `role_name`)
+VALUES
+	(1,'user'),
+	(2,'practitioner'),
+	(3,'patient'),
+	(4,'site admin'),
+	(5,'admin');
+
 
 # --- !Downs
 

@@ -34,6 +34,8 @@ public class User extends Model implements Subject {
 	@Id
 	public Long id;
 
+	public String uuid;
+	
 	@Email
 	// if you make this unique, keep in mind that users *must* merge/link their
 	// accounts then on signup with additional providers
@@ -138,6 +140,8 @@ public class User extends Model implements Subject {
 				.findByRoleName(controllers.Application.USER_ROLE));
 		// user.permissions = new ArrayList<UserPermission>();
 		// user.permissions.add(UserPermission.findByValue("printers.edit"));
+		user.uuid = UUID.randomUUID().toString(); 
+
 		user.active = true;
 		user.lastLogin = new Date();
 		user.linkedAccounts = Collections.singletonList(LinkedAccount

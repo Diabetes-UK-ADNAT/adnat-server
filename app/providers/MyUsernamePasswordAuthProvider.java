@@ -134,6 +134,13 @@ public class MyUsernamePasswordAuthProvider
 		// The user either does not exist or is inactive - create a new one
 		@SuppressWarnings("unused")
 		final User newUser = User.create(user);
+
+
+		// FIXME nhs addresses, and make practioner role
+
+		// 
+
+		
 		// Usually the email should be verified before allowing login, however
 		// if you return
 		// return SignupResult.USER_CREATED;
