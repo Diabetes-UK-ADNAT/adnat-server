@@ -25,11 +25,12 @@ public class AssessmentController extends BaseController {
 		// also, tokens set by touch login only for now
 		User u = User.findByLastLoginToken(assessment.userToken);
 		assessment.person = Person.findByAccount(u.uuid);
-		assessment.person.activity.lastAssessmentPosted = new Date();
-		Person.save(assessment.person);
 		Logger.debug(assessment.person.toString());
 		boolean create = assessment.id == null;
 		Assessment.save(assessment);
+		assessment.person.activity.lastAssessmentPosted = new Date();
+		assessment.person.activity.lastAssessmentUuid = assessment.getUUID();
+		Person.save(assessment.person);
 		if (create) {
 			sendNotification(assessment);
 			response().setHeader(LOCATION, "/v1/assessments/" + assessment.id);

@@ -68,5 +68,6 @@ public class Person extends BaseModel {
 	public static class Activity {
 
 		public Date lastAssessmentPosted;
+		public String lastAssessmentUuid;
 	}
 }
