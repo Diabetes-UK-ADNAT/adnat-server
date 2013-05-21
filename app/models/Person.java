@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import static models.BaseModel.ds;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import play.data.validation.Constraints;
 
 @Entity(noClassnameStored = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person extends BaseModel {
 
 	public String name;
+	@Constraints.Email
+	public String email;
 	public String accountUuid; //link to auth User.uuid
 	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
