@@ -59,14 +59,8 @@ public class PersonController extends BaseController {
 //// email update requires new password; or save original email so can update as it's the key
 
 		//PlayAuthenticate.storeUser(session(), authUser);
-		MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
-		signup.email = "ericmlink3y@gmail.com";//person.""
-		signup.password = "hello2";
-		signup.repeatPassword = "hello2";
-		signup.name = signup.email;
-		MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
 		//User u = User.findByUsernamePasswordIdentity(user);
-		User u = User.findByEmail(signup.email);
+		User u = User.findByEmail(person.email);
 		if (u != null) {
 			u.deleteManyToManyAssociations("roles");
 			for (String role : person.roles) {
@@ -74,7 +68,14 @@ public class PersonController extends BaseController {
 			}
 			u.saveManyToManyAssociations("roles");
 		} else {
-			u  = User.create(user);
+			MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
+			signup.email = person.email;
+			signup.password = person.password;
+			signup.repeatPassword = person.password;
+			person.password = null;
+			signup.name = signup.email;
+			MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
+			u = User.create(user);
 			u.roles = new ArrayList<SecurityRole>();
 			for (String role : person.roles) {
 				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));

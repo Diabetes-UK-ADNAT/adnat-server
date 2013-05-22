@@ -4,6 +4,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.query.Query;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ public class Person extends BaseModel {
 	@Constraints.Email
 	public String email;
 	public String accountUuid; //link to auth User.uuid
+	public String password;
 	public List<String> roles = new ArrayList<String>();
 	@Reference(ignoreMissing = true)
 	public Group site;
