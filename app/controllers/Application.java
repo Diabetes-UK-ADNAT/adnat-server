@@ -74,7 +74,8 @@ public class Application extends BaseController {
 	}
 
 	public static Result index() {
-		return redirect("https://myadnat.co.uk:4443/"); //FIXME URL dev/prod
+		//return redirect("https://myadnat.co.uk:4443/"); //FIXME URL dev/prod
+		return redirect("https://myadnat.co.uk/"); //FIXME URL dev/prod
 		//return ok(index.render());
 	}
 
