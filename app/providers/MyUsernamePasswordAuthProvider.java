@@ -312,7 +312,7 @@ public class MyUsernamePasswordAuthProvider
 		final boolean isSecure = getConfiguration().getBoolean(
 				SETTING_KEY_PASSWORD_RESET_LINK_SECURE);
 		final String url = routes.Signup.resetPassword(token).absoluteURL(
-				ctx.request(), isSecure);
+				ctx.request(), isSecure).replace("api", "auth"); 
 
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
 		final String langCode = lang.code();
@@ -393,8 +393,8 @@ public class MyUsernamePasswordAuthProvider
 		final boolean isSecure = getConfiguration().getBoolean(
 				SETTING_KEY_VERIFICATION_LINK_SECURE);
 		final String url = routes.Signup.verify(token).absoluteURL(
-				ctx.request(), isSecure);
-
+				ctx.request(), isSecure).replace("api", "auth");
+		
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
 		final String langCode = lang.code();
 

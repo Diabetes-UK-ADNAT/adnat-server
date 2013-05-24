@@ -67,8 +67,8 @@ public class AssessmentController extends BaseController {
 		mail.addFrom("ADNAT Support <support@myadnat.co.uk>");
 
 		Date notificationDate = new Date();
-//FIXME correct web host
-		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID(); //fixme web url
+		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID(); 
+		uri = uri.replace("api.", "");
 		String patient = assessment.person.name; 
 		String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
 		String txt = views.txt.email.email_assessment_notification.render(patient, uri, notificationDate).body();
