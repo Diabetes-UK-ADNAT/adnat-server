@@ -59,29 +59,21 @@ public class AssessmentController extends BaseController {
 	}
 
 	private static void sendNotification(Assessment assessment) {
-		// fixme add multiple recipients as list of strings or ?
-			Logger.debug("CARE TEAM:"); 
-		Person px = Person.findByAccount(assessment.person.accountUuid);
+		// body is same for all so just create once 
+		Date notificationDate = new Date();
+		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID();
+		uri = uri.replace("api.", "");
+		String patient = assessment.person.email;
+		String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
+		String txt = views.txt.email.email_assessment_notification.render(patient, uri, notificationDate).body();
 
-		for (Person p : px.careTeam) {
-			Logger.debug("CARE TEAM:" + p.toString());
-		}
+		// headers
+		Person px = Person.findByAccount(assessment.person.accountUuid);
 		for (Person p : px.careTeam) {
 			MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
-
-			// headers
 			mail.addFrom(Play.application().configuration().getString("adnat.email.support"));
 			mail.setSubject("ADNAT Assessment Posted");
 			mail.addRecipient(p.email);
-
-			// body
-			Date notificationDate = new Date();
-			String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID();
-			uri = uri.replace("api.", "");
-			String patient = assessment.person.email;
-			String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
-			String txt = views.txt.email.email_assessment_notification.render(patient, uri, notificationDate).body();
-
 			mail.send(txt, html);
 		}
 	}
