@@ -3,6 +3,7 @@ package controllers;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import java.util.ArrayList;
+import java.util.Iterator;
 import models.Person;
 import models.auth.SecurityRole;
 import models.auth.User;
@@ -29,30 +30,20 @@ public class PersonController extends BaseController {
 
 		// handle referenced objects
 		if (person.site == null) { //fixme bogus site example
-			models.Group ng = new models.Group();
-			ng.name = "from.person.controller " + new java.util.Date().toString();
-			models.Group.save(ng);
-			person.site = ng;
+			// error required field
 		} else {
 			person.site.id = new ObjectId(json.findPath("site").findPath("uuid").getTextValue());
 			models.Group.save(person.site);
 		}
 
-		// fixme two careTeam[] in json
-		// fixme picking up wrong uuid (site not care team)
-		// fixme map each collection uuid to person obj uuid
-		// does this replace entire collection (item deletes?)
-		// fixme need to map the json IDs to the java Person objs
-		//Iterator<JsonNode> careTeamMembers = json.findPath("careTeam").getElements();
-		String testUuid = json.findPath("careTeam").findPath("uuid").getTextValue();
-		for (Person p : person.careTeam) {
-			Logger.debug(p.toString());
-			p.id = new ObjectId(testUuid);//json.findPath("site").findPath("uuid").getTextValue());
-			Logger.debug(p.toString());
+		person.careTeam = new ArrayList();
+		Iterator<JsonNode> teamNodes = json.findPath("careTeam").getElements();
+		while (teamNodes.hasNext()) {
+			JsonNode n = teamNodes.next();
+			Person p = Json.fromJson(n, Person.class);
+			p.id = new ObjectId(n.get("uuid").getTextValue());
+			person.careTeam.add(p);
 		}
-		//
-		// test remove relationship
-		// works to remove rel: person.site = null;
 
 // pwd != null && == then set user
 // if not found create, with password
