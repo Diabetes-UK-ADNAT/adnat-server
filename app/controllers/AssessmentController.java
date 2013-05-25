@@ -59,19 +59,30 @@ public class AssessmentController extends BaseController {
 	}
 
 	private static void sendNotification(Assessment assessment) {
-		MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
-		mail.setSubject("ADNAT Assessment Posted");
-//FIXME add assessment notification recipients based on patient care team
-		mail.addRecipient("Eric Link <ericmlink@gmail.com>", "ericmlink@gmail.com");
+		// fixme add multiple recipients as list of strings or ?
+			Logger.debug("CARE TEAM:"); 
+		Person px = Person.findByAccount(assessment.person.accountUuid);
 
-		mail.addFrom(Play.application().configuration().getString("adnat.email.support"));
+		for (Person p : px.careTeam) {
+			Logger.debug("CARE TEAM:" + p.toString());
+		}
+		for (Person p : px.careTeam) {
+			MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
 
-		Date notificationDate = new Date();
-		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID(); 
-		uri = uri.replace("api.", "");
-		String patient = assessment.person.name; 
-		String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
-		String txt = views.txt.email.email_assessment_notification.render(patient, uri, notificationDate).body();
-		mail.send(txt, html);
+			// headers
+			mail.addFrom(Play.application().configuration().getString("adnat.email.support"));
+			mail.setSubject("ADNAT Assessment Posted");
+			mail.addRecipient(p.email);
+
+			// body
+			Date notificationDate = new Date();
+			String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID();
+			uri = uri.replace("api.", "");
+			String patient = assessment.person.email;
+			String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
+			String txt = views.txt.email.email_assessment_notification.render(patient, uri, notificationDate).body();
+
+			mail.send(txt, html);
+		}
 	}
 }
