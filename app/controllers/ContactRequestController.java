@@ -8,6 +8,7 @@ import play.mvc.BodyParser;
 import play.mvc.Result;
 import com.typesafe.plugin.*;
 import java.util.Date;
+import play.Play;
 
 public class ContactRequestController extends BaseController {
 
@@ -32,10 +33,8 @@ public class ContactRequestController extends BaseController {
 	private static void sendNotification(ContactRequest contactRequest) {
 		MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
 		mail.setSubject("ADNAT Contact Request");
-		mail.addRecipient("ADNAT Support <support@myadnat.co.uk>", "support@myadnat.co.uk");
-		mail.addFrom("ADNAT Support <support@myadnat.co.uk>");
-
-
+		mail.addRecipient(Play.application().configuration().getString("adnat.email.support"));
+		mail.addFrom(Play.application().configuration().getString("adnat.email.support"));
 		Date requestDate = new Date();
 		String uri = "https://" + request().host() + "/v1/contactrequests/" + contactRequest.getUUID(); //fixme web url
 		String html = views.html.email.email_contact.render(uri, requestDate).body();

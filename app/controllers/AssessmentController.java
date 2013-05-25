@@ -10,6 +10,7 @@ import com.typesafe.plugin.*;
 import java.util.Date;
 import models.Person;
 import models.auth.User;
+import play.Play;
 
 public class AssessmentController extends BaseController {
 
@@ -61,10 +62,9 @@ public class AssessmentController extends BaseController {
 		MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
 		mail.setSubject("ADNAT Assessment Posted");
 //FIXME add assessment notification recipients based on patient care team
-		mail.addRecipient("ADNAT Support <support@myadnat.co.uk>", "support@myadnat.co.uk");
 		mail.addRecipient("Eric Link <ericmlink@gmail.com>", "ericmlink@gmail.com");
 
-		mail.addFrom("ADNAT Support <support@myadnat.co.uk>");
+		mail.addFrom(Play.application().configuration().getString("adnat.email.support"));
 
 		Date notificationDate = new Date();
 		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID(); 

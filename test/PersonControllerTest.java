@@ -1,6 +1,4 @@
 
-import java.util.ArrayList;
-import models.Name;
 import models.Person;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -21,9 +19,7 @@ public class PersonControllerTest {
 
     private void createItem() {
         Person person = new Person();
-        person.name = new Name();
-        person.name.firstNames = "First Names";
-        person.name.lastName = "Last Name";
+        person.name = "First Name Last Name";
         JsonNode json = Json.toJson(person);
         System.out.println(json);
         Result result = routeAndCall(fakeRequest(POST, "/v1/persons").withJsonBody(json));

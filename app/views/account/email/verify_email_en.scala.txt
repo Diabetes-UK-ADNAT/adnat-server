@@ -1,7 +1,7 @@
 @(verificationUrl: String, token: String, name: String, email: String)Hello @name, 
 
 
-Thank you for signing up for ADNAT (http://myadnat.co.uk).
+Thank you for signing up for ADNAT (${play.configuration['adnat.index']}).
 To verify your e-mail address, please click this link now:
 @verificationUrl
 
