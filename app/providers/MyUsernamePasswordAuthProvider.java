@@ -96,6 +96,11 @@ public class MyUsernamePasswordAuthProvider
 		public String name;
 
 		public String validate() {
+			if (true) {//password == null || !password.equals(repeatPassword)) {
+				return "FAIL MyUsernamePasswordAuthProvider.MySignup.validate()";
+//				return Messages .get("playauthenticate.password.signup.error.passwords_not_same");
+			}
+
 			if (password == null || !password.equals(repeatPassword)) {
 				return Messages
 						.get("playauthenticate.password.signup.error.passwords_not_same");

@@ -65,6 +65,10 @@ public class Account extends Controller {
 		}
 
 		public String validate() {
+			if (true ) {//password == null || !password.equals(repeatPassword)) {
+				return "FAIL Account.PasswordChange.validate()";//Messages .get("playauthenticate.change_password.error.passwords_not_same");
+			}
+
 			if (password == null || !password.equals(repeatPassword)) {
 				return Messages
 						.get("playauthenticate.change_password.error.passwords_not_same");
