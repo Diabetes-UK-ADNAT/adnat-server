@@ -94,10 +94,12 @@ playauthenticate.verify.email.title=Verify your e-mail
 playauthenticate.verify.email.requirement=Before you can use ADNAT, you first need to verify your e-mail address.
 playauthenticate.verify.email.cta=An e-mail has been sent to the registered address. Please follow the embedded link to activate your account.
 
-playauthenticate.password.reset.title=Reset password
-playauthenticate.password.reset.cta=Reset my password
+playauthenticate.password.reset.title=Reset Password
+playauthenticate.password.reset.msg=Please set a new password for your account.
+playauthenticate.password.reset.rules=Passwords must be at least 8 characters and contain a number, letter and special character.
+playauthenticate.password.reset.cta=Reset My Password
 
-playauthenticate.password.forgot.title=Forgot password
+playauthenticate.password.forgot.title=Forgot Password
 playauthenticate.password.forgot.cta=Send reset instructions
 
 playauthenticate.oauth.access.denied.title=OAuth access denied

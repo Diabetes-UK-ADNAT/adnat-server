@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
 import models.Person;
 import models.auth.SecurityRole;
 import models.auth.User;
@@ -57,6 +58,9 @@ public class PersonController extends BaseController {
 			}
 			u.saveManyToManyAssociations("roles");
 		} else {
+			if (person.password == null ) {
+				person.password = UUID.randomUUID().toString();
+			}
 			MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
 			signup.email = person.email;
 			signup.password = person.password;
@@ -73,15 +77,18 @@ public class PersonController extends BaseController {
 			if (u.roles.contains(SecurityRole.findByRoleName("patient"))) {
 				User.verify(u);
 			} else {
+				// RESET SIGN UP add verify, we are just going to ask them to reset their new password
+				User.verify(u);
 				// invite / verify email address
 				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider.getProvider();
-				provider.sendVerifyEmailMailingAfterSignup(u, ctx());
+//				provider.sendVerifyEmailMailingAfterSignup(u, ctx()); // RESET SIGN UP
+				provider.sendPasswordResetMailing(u, ctx()); // RESET SIGN UP
 			}
 		}
 		////
 		// FIXME ref to auth user in Person
 
-		person.password = null;
+		person.password = null; //saved in auth system (roles are in both for ease of querying person by role)
 		Logger.debug(person.toString());
 		if (create) {
 			person.accountUuid = u.uuid;

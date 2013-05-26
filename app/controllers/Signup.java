@@ -140,8 +140,7 @@ public class Signup extends Controller {
 			return badRequest(no_token_or_invalid.render());
 		}
 
-		return ok(password_reset.render(PASSWORD_RESET_FORM
-				.fill(new PasswordReset(token))));
+		return ok(password_reset.render(ta.targetUser.email.toString(), PASSWORD_RESET_FORM.fill(new PasswordReset(token))));
 	}
 
 	public static Result doResetPassword() {
@@ -149,7 +148,7 @@ public class Signup extends Controller {
 		final Form<PasswordReset> filledForm = PASSWORD_RESET_FORM
 				.bindFromRequest();
 		if (filledForm.hasErrors()) {
-			return badRequest(password_reset.render(filledForm));
+			return badRequest(password_reset.render("", filledForm));
 		} else {
 			final String token = filledForm.get().token;
 			final String newPassword = filledForm.get().password;
