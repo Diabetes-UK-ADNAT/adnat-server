@@ -38,6 +38,7 @@ public class AssessmentController extends BaseController {
 			setHeaders();
 			return created();
 		} else {
+			// really only for creates now; revisit user logic when use for updates
 			return okWithHeaders();
 		}
 	}
