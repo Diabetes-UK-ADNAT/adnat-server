@@ -25,6 +25,7 @@ public class AssessmentController extends BaseController {
 		// users who post assessments can't login to site so this is ok; 
 		// also, tokens set by touch login only for now
 		User u = User.findByLastLoginToken(assessment.userToken);
+		Logger.debug(u.uuid);
 		assessment.person = Person.findByAccount(u.uuid);
 		Logger.debug(assessment.person.toString());
 		boolean create = assessment.id == null;

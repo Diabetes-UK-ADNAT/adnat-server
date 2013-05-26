@@ -58,7 +58,7 @@ public class Person extends BaseModel {
 
 	public static Person findByAccount(String uuid) {
 		Query<Person> q = ds.createQuery(Person.class);
-		q.criteria("accountUuid").equals(uuid);
+		q.field("accountUuid").equal(uuid);
 		return q.get();
 	}
 
