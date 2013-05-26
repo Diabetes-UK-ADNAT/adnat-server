@@ -1,7 +1,5 @@
 package controllers;
 
-import be.objectify.deadbolt.java.actions.Group;
-import be.objectify.deadbolt.java.actions.Restrict;
 import java.util.ArrayList;
 import java.util.Iterator;
 import models.Person;
@@ -22,7 +20,6 @@ public class PersonController extends BaseController {
 	public static Result save() {
 		Logger.debug("save");
 		JsonNode json = getJsonFromBody();
-		Logger.debug(json.toString());
 		// get person 
 		Person person = Json.fromJson(json, Person.class);
 		person.id = getObjectId(json);
@@ -45,16 +42,17 @@ public class PersonController extends BaseController {
 			person.careTeam.add(p);
 		}
 
-// pwd != null && == then set user
-// if not found create, with password
-//// email update requires new password; or save original email so can update as it's the key
-
 		//PlayAuthenticate.storeUser(session(), authUser);
 		//User u = User.findByUsernamePasswordIdentity(user);
 		User u = User.findByEmail(person.email);
 		if (u != null) {
+			if (person.password != null) {
+				u.changePassword(new MyUsernamePasswordAuthUser(person.password), true);
+				u.save();
+			}
 			u.deleteManyToManyAssociations("roles");
 			for (String role : person.roles) {
+				Logger.debug(role);
 				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
 			}
 			u.saveManyToManyAssociations("roles");
@@ -63,7 +61,6 @@ public class PersonController extends BaseController {
 			signup.email = person.email;
 			signup.password = person.password;
 			signup.repeatPassword = person.password;
-			person.password = null;
 			signup.name = signup.email;
 			MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
 			u = User.create(user);
@@ -84,6 +81,7 @@ public class PersonController extends BaseController {
 		////
 		// FIXME ref to auth user in Person
 
+		person.password = null;
 		Logger.debug(person.toString());
 		if (create) {
 			person.accountUuid = u.uuid;
