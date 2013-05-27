@@ -74,7 +74,7 @@ public class MyUsernamePasswordAuthProvider
 			com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider.UsernamePassword {
 
 		@Required
-		@MinLength(5)
+		@MinLength(8)
 		public String password;
 
 		@Override
@@ -91,7 +91,7 @@ public class MyUsernamePasswordAuthProvider
 	public static class MySignup extends MyLogin {
 
 		@Required
-		@MinLength(5)
+		@MinLength(8)
 		public String repeatPassword;
 		@Required
 		public String name;
@@ -102,6 +102,9 @@ public class MyUsernamePasswordAuthProvider
 			}
 			if (!password.matches(Play.application().configuration().getString("adnat.password.characters"))) {
 				return Messages.get("playauthenticate.password.error.password_requirements");
+			}
+			if (email != null && !email.toLowerCase().matches(Play.application().configuration().getString("adnat.email.domains"))) {
+				return Messages.get("playauthenticate.email_requirements");
 			}
 			return null;
 		}
