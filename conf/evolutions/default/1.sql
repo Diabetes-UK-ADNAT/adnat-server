@@ -76,11 +76,11 @@ alter table users_user_permission add constraint fk_users_user_permission_user_p
 
 INSERT INTO `security_role` (`id`, `role_name`)
 VALUES
-	(1,'user'),
-	(2,'practitioner'),
-	(3,'patient'),
-	(4,'site admin'),
-	(5,'admin');
+	(1,'User'),
+	(2,'Practitioner'),
+	(3,'Patient'),
+	(4,'Site Admin'),
+	(5,'Admin');
 
 
 # --- !Downs

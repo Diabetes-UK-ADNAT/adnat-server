@@ -85,7 +85,7 @@ public class Account extends Controller {
 		return ok(link.render());
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result verifyEmail() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final User user = Application.getLocalUser(session());
@@ -107,7 +107,7 @@ public class Account extends Controller {
 		return redirect(routes.Application.profile());
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result changePassword() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final User u = Application.getLocalUser(session());
@@ -119,7 +119,7 @@ public class Account extends Controller {
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result doChangePassword() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final Form<Account.PasswordChange> filledForm = PASSWORD_CHANGE_FORM

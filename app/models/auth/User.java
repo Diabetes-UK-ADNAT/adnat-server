@@ -18,6 +18,7 @@ import play.db.ebean.Model;
 
 import javax.persistence.*;
 import java.util.*;
+import providers.MyUsernamePasswordAuthProvider;
 
 /**
  * Initial version based on work by Steve Chaloner (steve@objectify.be) for
@@ -126,7 +127,7 @@ public class User extends Model implements Subject {
 	public static User create(final AuthUser authUser) {
 		final User user = new User();
 		user.roles = new ArrayList();
-		user.roles.add(SecurityRole.findByRoleName(controllers.Application.USER_ROLE));
+		user.roles.add(SecurityRole.findByRoleName(MyUsernamePasswordAuthProvider.USER_ROLE));
 		// user.permissions = new ArrayList<UserPermission>();
 		// user.permissions.add(UserPermission.findByValue("printers.edit"));
 		user.uuid = UUID.randomUUID().toString();

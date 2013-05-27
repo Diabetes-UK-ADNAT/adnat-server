@@ -23,10 +23,10 @@ import play.mvc.Http.Context;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import models.Person;
 import models.auth.SecurityRole;
 import play.Play;
 
@@ -35,12 +35,16 @@ import static play.data.Form.form;
 public class MyUsernamePasswordAuthProvider
 		extends UsernamePasswordAuthProvider<String, MyLoginUsernamePasswordAuthUser, MyUsernamePasswordAuthUser, MyUsernamePasswordAuthProvider.MyLogin, MyUsernamePasswordAuthProvider.MySignup> {
 
-	private static final String SETTING_KEY_VERIFICATION_LINK_SECURE = SETTING_KEY_MAIL
-			+ "." + "verificationLink.secure";
-	private static final String SETTING_KEY_PASSWORD_RESET_LINK_SECURE = SETTING_KEY_MAIL
-			+ "." + "passwordResetLink.secure";
+	private static final String SETTING_KEY_VERIFICATION_LINK_SECURE = SETTING_KEY_MAIL + "." + "verificationLink.secure";
+	private static final String SETTING_KEY_PASSWORD_RESET_LINK_SECURE = SETTING_KEY_MAIL + "." + "passwordResetLink.secure";
 	private static final String SETTING_KEY_LINK_LOGIN_AFTER_PASSWORD_RESET = "loginAfterPasswordReset";
 	private static final String EMAIL_TEMPLATE_FALLBACK_LANGUAGE = "en";
+
+	public static final String USER_ROLE_PRACTITIONER = "Practitioner";
+	public static final String USER_ROLE_PATIENT = "Patient";
+	public static final String USER_ROLE = "User";
+	public static final String USER_ROLE_SITE_ADMIN = "Site Admin";
+	public static final String USER_ROLE_ADMIN = "Admin";
 
 	@Override
 	protected List<String> neededSettingKeys() {
@@ -142,10 +146,17 @@ public class MyUsernamePasswordAuthProvider
 		@SuppressWarnings("unused")
 		final User newUser = User.create(user);
 		// all users who signup via external are practitioners with nhs address
-		newUser.roles.add(SecurityRole.findByRoleName(controllers.Application.USER_ROLE_PRACTITIONER));
+		newUser.roles.add(SecurityRole.findByRoleName(USER_ROLE_PRACTITIONER));
 		newUser.save();
 		newUser.saveManyToManyAssociations("roles");
 
+		Person p = new Person();
+		p.name = newUser.name;
+		p.email = newUser.email;
+		for (SecurityRole role : newUser.roles) {
+			p.roles.add(role.roleName);
+		}
+		Person.save(p);
 		// Usually the email should be verified before allowing login, however
 		// if you return
 		// return SignupResult.USER_CREATED;
@@ -192,7 +203,8 @@ public class MyUsernamePasswordAuthProvider
 		if (u == null) {
 			return LoginResult.NOT_FOUND;
 		} else {
-			if (u.roles.size() == 1 && u.roles.contains(SecurityRole.findByRoleName("patient"))) {
+			// USER_ROLE AND USER_ROLE_PATIENT
+			if (u.roles.size() == 2 && u.roles.contains(SecurityRole.findByRoleName(USER_ROLE_PATIENT))) {
 				// no website login allowed for Patients
 				return LoginResult.NOT_FOUND;
 			}

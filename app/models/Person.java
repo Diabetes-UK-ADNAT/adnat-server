@@ -51,7 +51,7 @@ public class Person extends BaseModel {
 			q.limit(15);
 		}
 		if (roleFilter != null) {
-			q.field("roles").contains(roleFilter);
+			q.field("roles").containsIgnoreCase(roleFilter);
 		}
 		return q.asList();
 	}

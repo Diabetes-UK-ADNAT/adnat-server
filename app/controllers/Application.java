@@ -35,12 +35,6 @@ public class Application extends BaseController {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "error";
-	//fixme refactor to proper location
-	public static final String USER_ROLE = "user";
-	public static final String USER_ROLE_PRACTITIONER = "practitioner";
-	public static final String USER_ROLE_PATIENT = "patient";
-	public static final String USER_ROLE_SITE_ADMIN = "site admin";
-	public static final String USER_ROLE_ADMIN = "admin";
 
 	public static Result options(String url) {
 		Logger.debug("options" + url);

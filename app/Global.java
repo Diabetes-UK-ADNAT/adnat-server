@@ -29,6 +29,7 @@ import play.GlobalSettings;
 import play.mvc.Call;
 
 import controllers.routes;
+import providers.MyUsernamePasswordAuthProvider;
 
 public class Global extends GlobalSettings {
 
@@ -127,7 +128,7 @@ public class Global extends GlobalSettings {
     private void initialData() {
         if (SecurityRole.find.findRowCount() == 0) {
             for (final String roleName : Arrays
-                    .asList(controllers.Application.USER_ROLE)) {
+                    .asList(MyUsernamePasswordAuthProvider.USER_ROLE)) {
                 final SecurityRole role = new SecurityRole();
                 role.roleName = roleName;
                 role.save();

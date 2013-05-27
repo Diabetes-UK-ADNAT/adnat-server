@@ -58,7 +58,7 @@ public class PersonController extends BaseController {
 			}
 			u.saveManyToManyAssociations("roles");
 		} else {
-			if (person.password == null ) {
+			if (person.password == null) {
 				person.password = UUID.randomUUID().toString();
 			}
 			MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
@@ -69,7 +69,8 @@ public class PersonController extends BaseController {
 			MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
 			u = User.create(user);
 			for (String role : person.roles) {
-				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
+				SecurityRole newRole = SecurityRole.findByRoleName(role.toLowerCase());
+				u.roles.add(newRole);
 			}
 			u.save();
 			u.saveManyToManyAssociations("roles");
@@ -84,13 +85,12 @@ public class PersonController extends BaseController {
 				provider.sendPasswordResetMailing(u, ctx()); // RESET SIGN UP
 			}
 		}
-		////
-		// FIXME ref to auth user in Person
 
 		person.password = null; //saved in auth system (roles are in both for ease of querying person by role)
 		Logger.debug(person.toString());
 		if (create) {
 			person.accountUuid = u.uuid;
+			person.roles.add(MyUsernamePasswordAuthProvider.USER_ROLE);
 			Person.save(person);
 		} else {
 			// FIXME THIS SEEMS WRONG?:
