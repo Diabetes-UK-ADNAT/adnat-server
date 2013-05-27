@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.UUID;
 import models.Person;
 import models.auth.SecurityRole;
+import models.auth.TokenAction;
+import models.auth.TokenAction;
 import models.auth.User;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;
@@ -109,6 +111,12 @@ public class PersonController extends BaseController {
 
 	public static Result delete(String id) {
 		Logger.debug(id);
+		Person p = Person.find(id);
+		User u = User.findByEmail(p.email);
+		TokenAction.deleteByUser(u, TokenAction.Type.PASSWORD_RESET);
+		TokenAction.deleteByUser(u, TokenAction.Type.EMAIL_VERIFICATION);
+		u.deleteManyToManyAssociations("roles");
+		u.delete();
 		Person.delete(id);
 		return okWithHeaders();
 	}
