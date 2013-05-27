@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import models.auth.SecurityRole;
+import play.Play;
 
 import static play.data.Form.form;
 
@@ -96,14 +97,11 @@ public class MyUsernamePasswordAuthProvider
 		public String name;
 
 		public String validate() {
-			if (true) {//password == null || !password.equals(repeatPassword)) {
-				return "FAIL MyUsernamePasswordAuthProvider.MySignup.validate()";
-//				return Messages .get("playauthenticate.password.signup.error.passwords_not_same");
-			}
-
 			if (password == null || !password.equals(repeatPassword)) {
-				return Messages
-						.get("playauthenticate.password.signup.error.passwords_not_same");
+				return Messages.get("playauthenticate.password.signup.error.passwords_not_same");
+			}
+			if (!password.matches(Play.application().configuration().getString("adnat.password.characters"))) {
+				return Messages.get("playauthenticate.password.error.password_requirements");
 			}
 			return null;
 		}
@@ -145,7 +143,7 @@ public class MyUsernamePasswordAuthProvider
 
 		// 
 
-		
+
 		// Usually the email should be verified before allowing login, however
 		// if you return
 		// return SignupResult.USER_CREATED;
@@ -168,7 +166,7 @@ public class MyUsernamePasswordAuthProvider
 							// Password was correct
 							u.lastLogin = new Date();
 							u.lastLoginToken = UUID.randomUUID().toString();
-							u.lastLoginFrom = appKey; 
+							u.lastLoginFrom = appKey;
 							u.save();
 							return u.lastLoginToken;
 						} else {
@@ -317,7 +315,7 @@ public class MyUsernamePasswordAuthProvider
 		final boolean isSecure = getConfiguration().getBoolean(
 				SETTING_KEY_PASSWORD_RESET_LINK_SECURE);
 		final String url = routes.Signup.resetPassword(token).absoluteURL(
-				ctx.request(), isSecure).replace("api", "auth"); 
+				ctx.request(), isSecure).replace("api", "auth");
 
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
 		final String langCode = lang.code();
@@ -399,7 +397,7 @@ public class MyUsernamePasswordAuthProvider
 				SETTING_KEY_VERIFICATION_LINK_SECURE);
 		final String url = routes.Signup.verify(token).absoluteURL(
 				ctx.request(), isSecure).replace("api", "auth");
-		
+
 		final Lang lang = Lang.preferred(ctx.request().acceptLanguages());
 		final String langCode = lang.code();
 

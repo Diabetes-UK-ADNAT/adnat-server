@@ -15,7 +15,6 @@ import views.html.account.signup.*;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import models.auth.SecurityRole;
-import play.Logger;
 
 import static play.data.Form.form;
 import static play.mvc.Results.redirect;

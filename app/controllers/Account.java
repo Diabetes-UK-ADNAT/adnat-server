@@ -7,6 +7,7 @@ import be.objectify.deadbolt.java.actions.SubjectPresent;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
+import play.Play;
 
 import play.data.Form;
 import play.data.format.Formats.NonEmpty;
@@ -40,11 +41,11 @@ public class Account extends Controller {
 	}
 
 	public static class PasswordChange {
-		@MinLength(5)
+		@MinLength(8)
 		@Required
 		public String password;
 
-		@MinLength(5)
+		@MinLength(8)
 		@Required
 		public String repeatPassword;
 
@@ -65,13 +66,11 @@ public class Account extends Controller {
 		}
 
 		public String validate() {
-			if (true ) {//password == null || !password.equals(repeatPassword)) {
-				return "FAIL Account.PasswordChange.validate()";//Messages .get("playauthenticate.change_password.error.passwords_not_same");
-			}
-
 			if (password == null || !password.equals(repeatPassword)) {
-				return Messages
-						.get("playauthenticate.change_password.error.passwords_not_same");
+				return Messages .get("playauthenticate.change_password.error.passwords_not_same");
+			}
+			if (!password.matches(Play.application().configuration().getString("adnat.password.characters"))) {
+				return Messages.get("playauthenticate.password.error.password_requirements");
 			}
 			return null;
 		}
