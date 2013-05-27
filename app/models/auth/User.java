@@ -125,16 +125,15 @@ public class User extends Model implements Subject {
 
 	public static User create(final AuthUser authUser) {
 		final User user = new User();
-		user.roles = Collections.singletonList(SecurityRole
-				.findByRoleName(controllers.Application.USER_ROLE));
+		user.roles = new ArrayList();
+		user.roles.add(SecurityRole.findByRoleName(controllers.Application.USER_ROLE));
 		// user.permissions = new ArrayList<UserPermission>();
 		// user.permissions.add(UserPermission.findByValue("printers.edit"));
 		user.uuid = UUID.randomUUID().toString();
 
 		user.active = true;
 		user.lastLogin = new Date();
-		user.linkedAccounts = Collections.singletonList(LinkedAccount
-				.create(authUser));
+		user.linkedAccounts = Collections.singletonList(LinkedAccount.create(authUser));
 
 		if (authUser instanceof EmailIdentity) {
 			final EmailIdentity identity = (EmailIdentity) authUser;

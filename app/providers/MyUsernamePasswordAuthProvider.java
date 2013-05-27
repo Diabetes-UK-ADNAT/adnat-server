@@ -23,6 +23,7 @@ import play.mvc.Http.Context;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -140,12 +141,10 @@ public class MyUsernamePasswordAuthProvider
 		// The user either does not exist or is inactive - create a new one
 		@SuppressWarnings("unused")
 		final User newUser = User.create(user);
-
-
-		// FIXME nhs addresses, and make practioner role
-
-		// 
-
+		// all users who signup via external are practitioners with nhs address
+		newUser.roles.add(SecurityRole.findByRoleName(controllers.Application.USER_ROLE_PRACTITIONER));
+		newUser.save();
+		newUser.saveManyToManyAssociations("roles");
 
 		// Usually the email should be verified before allowing login, however
 		// if you return

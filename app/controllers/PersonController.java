@@ -68,7 +68,6 @@ public class PersonController extends BaseController {
 			signup.name = signup.email;
 			MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
 			u = User.create(user);
-			u.roles = new ArrayList<SecurityRole>();
 			for (String role : person.roles) {
 				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
 			}
