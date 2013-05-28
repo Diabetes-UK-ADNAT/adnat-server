@@ -18,8 +18,8 @@ import providers.MyUsernamePasswordAuthProvider;
 public class AssessmentController extends BaseController {
 
 	@BodyParser.Of(value = BodyParser.Json.class)
-	@Restrict(
-			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+//	@Restrict(
+//			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result save() {
 		Logger.debug("save");
 		Logger.debug(request().body().toString());
