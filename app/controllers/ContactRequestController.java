@@ -1,5 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import models.ContactRequest;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
@@ -9,6 +11,7 @@ import play.mvc.Result;
 import com.typesafe.plugin.*;
 import java.util.Date;
 import play.Play;
+import providers.MyUsernamePasswordAuthProvider;
 
 public class ContactRequestController extends BaseController {
 
@@ -42,17 +45,23 @@ public class ContactRequestController extends BaseController {
 		mail.send(txt, html);
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result delete(String id) {
 		Logger.debug(id);
 		ContactRequest.delete(id);
 		return okWithHeaders();
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result getAll() {
 		Logger.debug("getAll");
 		return okJsonWithHeaders(ContactRequest.all());
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result getById(String id) {
 		Logger.debug(id);
 		return okJsonWithHeaders(ContactRequest.find(id));

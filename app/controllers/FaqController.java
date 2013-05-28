@@ -13,7 +13,8 @@ import providers.MyUsernamePasswordAuthProvider;
 
 public class FaqController extends BaseController {
 
-	@Restrict(@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	@BodyParser.Of(value = BodyParser.Json.class)
 	public static Result save() {
 		Logger.debug("save");
@@ -31,7 +32,8 @@ public class FaqController extends BaseController {
 		}
 	}
 
-	@Restrict(@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result delete(String id) {
 		Logger.debug(id);
 		Faq.delete(id);
@@ -44,7 +46,8 @@ public class FaqController extends BaseController {
 		return okJsonWithHeaders(Faq.all());
 	}
 
-	@Restrict(@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result getById(String id) {
 		Logger.debug(id);
 		return okJsonWithHeaders(Faq.find(id));

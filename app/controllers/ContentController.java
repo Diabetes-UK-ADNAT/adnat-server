@@ -1,15 +1,20 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import models.Content;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import providers.MyUsernamePasswordAuthProvider;
 
 public class ContentController extends BaseController {
 
     @BodyParser.Of(value = BodyParser.Json.class)
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
     public static Result save() {
         Logger.debug("save");
         JsonNode json = getJsonFromBody();
@@ -26,17 +31,23 @@ public class ContentController extends BaseController {
         }
     }
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
     public static Result delete(String id) {
         Logger.debug(id);
         Content.delete(id);
         return okWithHeaders();
     }
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
     public static Result getAll() {
         Logger.debug("getAll");
         return okJsonWithHeaders(Content.all());
     }
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
     public static Result getById(String id) {
         Logger.debug(id);
         return okJsonWithHeaders(Content.find(id));

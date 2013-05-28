@@ -24,6 +24,8 @@ import providers.MyUsernamePasswordAuthUser;
 public class PersonController extends BaseController {
 
 	@BodyParser.Of(value = BodyParser.Json.class)
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result save() {
 		Logger.debug("save");
 		JsonNode json = getJsonFromBody();
@@ -46,6 +48,8 @@ public class PersonController extends BaseController {
 		}
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result delete(String id) {
 		Logger.debug(id);
 		Person p = Person.find(id);
@@ -68,6 +72,8 @@ public class PersonController extends BaseController {
 		return okJsonWithHeaders(Person.all(getSubject(), roleFilter, nameFilter));
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result getById(String id) {
 		Logger.debug(id);
 		return okJsonWithHeaders(Person.find(id));

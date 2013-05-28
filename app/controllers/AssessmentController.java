@@ -1,5 +1,7 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import models.Assessment;
 import org.codehaus.jackson.JsonNode;
 import play.Logger;
@@ -11,10 +13,13 @@ import java.util.Date;
 import models.Person;
 import models.auth.User;
 import play.Play;
+import providers.MyUsernamePasswordAuthProvider;
 
 public class AssessmentController extends BaseController {
 
 	@BodyParser.Of(value = BodyParser.Json.class)
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result save() {
 		Logger.debug("save");
 		Logger.debug(request().body().toString());
@@ -44,17 +49,23 @@ public class AssessmentController extends BaseController {
 		}
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result delete(String id) {
 		Logger.debug(id);
 		Assessment.delete(id);
 		return okWithHeaders();
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN))
 	public static Result getAll() {
 		Logger.debug("getAll");
 		return okJsonWithHeaders(Assessment.all());
 	}
 
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result getById(String id) {
 		Logger.debug(id);
 		return okJsonWithHeaders(Assessment.find(id));
