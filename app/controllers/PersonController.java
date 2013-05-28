@@ -2,6 +2,7 @@ package controllers;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.feth.play.module.pa.PlayAuthenticate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,7 +58,8 @@ public class PersonController extends BaseController {
 		return okWithHeaders();
 	}
 
-	@Restrict( @Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result getAll() {
 		Logger.debug("getAll");
 		String roleFilter = request().getQueryString("qRole");
@@ -69,6 +71,13 @@ public class PersonController extends BaseController {
 	public static Result getById(String id) {
 		Logger.debug(id);
 		return okJsonWithHeaders(Person.find(id));
+	}
+
+//	@SubjectPresent
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+	public static Result subject() {
+		return okJsonWithHeaders(getSubject());
 	}
 
 	private static User createUserAccount(Person person) {

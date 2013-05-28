@@ -10,6 +10,7 @@ import java.util.Date;
 import static models.BaseModel.ds;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import play.data.validation.Constraints;
+import providers.MyUsernamePasswordAuthProvider;
 
 @Entity(noClassnameStored = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -45,7 +46,16 @@ public class Person extends BaseModel {
 		if (subject == null) {
 			throw new IllegalArgumentException("Authentication subject is required but was null");
 		}
-		q.field("site").equal(subject.site);
+		if (roleFilter == null) {
+			throw new IllegalArgumentException("Role filter is required but was null");
+		}
+
+		if (subject.roles.contains(MyUsernamePasswordAuthProvider.USER_ROLE_ADMIN)
+				&& roleFilter.equalsIgnoreCase(MyUsernamePasswordAuthProvider.USER_ROLE_PRACTITIONER)) {
+			// no site filter for Admin looking for Practitioners
+		} else {
+			q.field("site").equal(subject.site);
+		}
 
 		if (nameFilter != null) {
 			String[] tokens = nameFilter.replaceAll(",", "").split(" ");
@@ -56,10 +66,8 @@ public class Person extends BaseModel {
 			q.limit(15);
 		}
 
-		if (roleFilter != null) {
-			q.field("roles").containsIgnoreCase(roleFilter);
-		}
-		
+		q.field("roles").containsIgnoreCase(roleFilter);
+
 		return q.asList();
 	}
 

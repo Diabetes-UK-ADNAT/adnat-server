@@ -21,7 +21,8 @@ public class BaseController extends Controller {
 				"origin, Content-Type, X-Requested-With, x-requested-with, content-type, X-Auth-Token, X-App-Key");
 		response().setHeader("Access-Control-Allow-Methods",
 				"PUT, GET, POST, DELETE, OPTIONS");
-		response().setHeader("Access-Control-Max-Age", "1728000");
+		response().setHeader("Access-Control-Max-Age", "10");
+//		response().setHeader("Access-Control-Max-Age", "1728000");
 		// http://stackoverflow.com/questions/7067966/how-to-allow-cors-in-express-nodejs
 	}
 
