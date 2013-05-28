@@ -46,8 +46,6 @@ public class ContentController extends BaseController {
         return okJsonWithHeaders(Content.all());
     }
 
-	@Restrict(
-			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
     public static Result getById(String id) {
         Logger.debug(id);
         return okJsonWithHeaders(Content.find(id));
