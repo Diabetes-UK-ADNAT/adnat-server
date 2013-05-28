@@ -4,7 +4,6 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
-import com.google.code.morphia.annotations.Transient;
 import com.google.code.morphia.query.Query;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,24 +34,32 @@ public class Person extends BaseModel {
 		return ds.find(Person.class).field("_id").equal(new ObjectId(id)).get();
 	}
 
-	public static List<Person> all(String roleFilter, String nameFilter) {
+	public static List<Person> all(Person subject, String roleFilter, String nameFilter) {
 		Query<Person> q = ds.createQuery(Person.class);
 		q.limit(100); //default max limit
+
+		// filtering by role example
+		// && roleFilter != null
+		// && subject.roles.contains(MyUsernamePasswordAuthProvider.USER_ROLE_PRACTITIONER)
+		// && roleFilter.contains(MyUsernamePasswordAuthProvider.USER_ROLE_PATIENT)
+		if (subject == null) {
+			throw new IllegalArgumentException("Authentication subject is required but was null");
+		}
+		q.field("site").equal(subject.site);
 
 		if (nameFilter != null) {
 			String[] tokens = nameFilter.replaceAll(",", "").split(" ");
 			for (String t : tokens) {
-				q.or(
-						//q.criteria("name.firstNames").startsWithIgnoreCase(t),
-						//q.criteria("name.lastName").startsWithIgnoreCase(t));
-						q.criteria("name").containsIgnoreCase(t),
+				q.or(q.criteria("name").containsIgnoreCase(t),
 						q.criteria("email").containsIgnoreCase(t));
 			}
 			q.limit(15);
 		}
+
 		if (roleFilter != null) {
 			q.field("roles").containsIgnoreCase(roleFilter);
 		}
+		
 		return q.asList();
 	}
 

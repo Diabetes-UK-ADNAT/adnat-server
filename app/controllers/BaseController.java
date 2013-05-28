@@ -1,7 +1,11 @@
 package controllers;
 
+import com.feth.play.module.pa.PlayAuthenticate;
+import models.Person;
+import models.auth.User;
 import org.bson.types.ObjectId;
 import org.codehaus.jackson.JsonNode;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.libs.Json.*;
@@ -44,4 +48,21 @@ public class BaseController extends Controller {
 		return request().body().asJson();
 	}
 
+	protected static Person getSubject() {
+		User u = User.findByAuthUserIdentity(PlayAuthenticate.getUser(session()));
+		Logger.debug("User=" + u);
+		Person subject = u == null ? null : Person.findByAccount(u.uuid);
+		Logger.debug("Subj=" + subject);
+		if (subject != null) {
+			StringBuilder sb = new StringBuilder();
+			for(String r:subject.roles) {
+				sb.append(r);
+				sb.append(',');
+			}
+			Logger.debug("subject.uuid="+ subject.getUUID());
+			Logger.debug("subject.roles="+ sb.toString());
+			Logger.debug("subject.site="+ subject.site);
+		}
+		return subject;
+	}
 }

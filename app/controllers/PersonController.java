@@ -1,11 +1,13 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import com.feth.play.module.pa.PlayAuthenticate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 import models.Person;
 import models.auth.SecurityRole;
-import models.auth.TokenAction;
 import models.auth.TokenAction;
 import models.auth.User;
 import org.bson.types.ObjectId;
@@ -13,6 +15,7 @@ import org.codehaus.jackson.JsonNode;
 import play.Logger;
 import play.libs.Json;
 import play.mvc.BodyParser;
+import static play.mvc.Controller.ctx;
 import play.mvc.Result;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthUser;
@@ -28,78 +31,11 @@ public class PersonController extends BaseController {
 		person.id = getObjectId(json);
 		boolean create = person.id == null;
 
-		// handle referenced objects
-		if (person.site == null) { //fixme bogus site example
-			// error required field
-		} else {
-			person.site.id = new ObjectId(json.findPath("site").findPath("uuid").getTextValue());
-			models.Group.save(person.site);
-		}
+		saveSite(person, json);
+		saveCareTeam(person, json);
+		User u = saveUser(person);
+		savePerson(person, create, u);
 
-		person.careTeam = new ArrayList();
-		Iterator<JsonNode> teamNodes = json.findPath("careTeam").getElements();
-		while (teamNodes.hasNext()) {
-			JsonNode n = teamNodes.next();
-			Person p = Json.fromJson(n, Person.class);
-			p.id = new ObjectId(n.get("uuid").getTextValue());
-			person.careTeam.add(p);
-		}
-
-		//PlayAuthenticate.storeUser(session(), authUser);
-		//User u = User.findByUsernamePasswordIdentity(user);
-		User u = User.findByEmail(person.email);
-		if (u != null) {
-			if (person.password != null) {
-				u.changePassword(new MyUsernamePasswordAuthUser(person.password), true);
-				u.save();
-			}
-			u.deleteManyToManyAssociations("roles");
-			for (String role : person.roles) {
-				Logger.debug(role);
-				u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
-			}
-			u.saveManyToManyAssociations("roles");
-		} else {
-			if (person.password == null) {
-				person.password = UUID.randomUUID().toString();
-			}
-			MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
-			signup.email = person.email;
-			signup.password = person.password;
-			signup.repeatPassword = person.password;
-			signup.name = signup.email;
-			MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
-			u = User.create(user);
-			for (String role : person.roles) {
-				SecurityRole newRole = SecurityRole.findByRoleName(role.toLowerCase());
-				u.roles.add(newRole);
-			}
-			u.save();
-			u.saveManyToManyAssociations("roles");
-			if (u.roles.contains(SecurityRole.findByRoleName("patient"))) {
-				User.verify(u);
-			} else {
-				// RESET SIGN UP add verify, we are just going to ask them to reset their new password
-				User.verify(u);
-				// invite / verify email address
-				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider.getProvider();
-//				provider.sendVerifyEmailMailingAfterSignup(u, ctx()); // RESET SIGN UP
-				provider.sendPasswordResetMailing(u, ctx()); // RESET SIGN UP
-			}
-		}
-
-		person.password = null; //saved in auth system (roles are in both for ease of querying person by role)
-		Logger.debug(person.toString());
-		if (create) {
-			person.accountUuid = u.uuid;
-			person.roles.add(MyUsernamePasswordAuthProvider.USER_ROLE);
-			Person.save(person);
-		} else {
-			// FIXME THIS SEEMS WRONG?:
-			Person.find(person.getUUID());
-			Person.save(person);
-
-		}
 		if (create) {
 			response().setHeader(LOCATION, "/v1/persons/" + person.id);
 			setHeaders();
@@ -121,18 +57,112 @@ public class PersonController extends BaseController {
 		return okWithHeaders();
 	}
 
-//	@Restrict(
-//			@Group(Application.USER_ROLE))
+	@Restrict( @Group(MyUsernamePasswordAuthProvider.USER_ROLE))
 	public static Result getAll() {
 		Logger.debug("getAll");
 		String roleFilter = request().getQueryString("qRole");
 		String nameFilter = request().getQueryString("qName");
 		Logger.debug("getAll?qName=" + nameFilter + "&qRole=" + roleFilter);
-		return okJsonWithHeaders(Person.all(roleFilter, nameFilter));
+		return okJsonWithHeaders(Person.all(getSubject(), roleFilter, nameFilter));
 	}
 
 	public static Result getById(String id) {
 		Logger.debug(id);
 		return okJsonWithHeaders(Person.find(id));
+	}
+
+	private static User createUserAccount(Person person) {
+		MyUsernamePasswordAuthProvider.MySignup signup = new MyUsernamePasswordAuthProvider.MySignup();
+		signup.email = person.email;
+		signup.password = person.password;
+		signup.repeatPassword = person.password;
+		signup.name = signup.email;
+		MyUsernamePasswordAuthUser user = new MyUsernamePasswordAuthUser(signup);
+		return User.create(user);
+	}
+
+	private static void updateUserAccount(Person person, User u) {
+		if (person.password != null) {
+			u.changePassword(new MyUsernamePasswordAuthUser(person.password), true);
+			u.save();
+		}
+		u.deleteManyToManyAssociations("roles");
+		for (String role : person.roles) {
+			Logger.debug(role);
+			u.roles.add(SecurityRole.findByRoleName(role.toLowerCase()));
+		}
+		u.saveManyToManyAssociations("roles");
+	}
+
+	private static User setupNewUser(Person person, User u) {
+		if (person.password == null) {
+			person.password = UUID.randomUUID().toString();
+		}
+		u = createUserAccount(person);
+		for (String role : person.roles) {
+			SecurityRole newRole = SecurityRole.findByRoleName(role.toLowerCase());
+			u.roles.add(newRole);
+		}
+		u.save();
+		u.saveManyToManyAssociations("roles");
+		if (u.roles.contains(SecurityRole.findByRoleName("patient"))) {
+			User.verify(u);
+		} else {
+			// RESET SIGN UP add verify, we are just going to ask them to reset their new password
+			User.verify(u);
+			// invite / verify email address
+			final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider.getProvider();
+//				provider.sendVerifyEmailMailingAfterSignup(u, ctx()); // RESET SIGN UP
+			provider.sendPasswordResetMailing(u, ctx()); // RESET SIGN UP
+		}
+		return u;
+	}
+
+	private static void savePerson(Person person, boolean create, User u) {
+		person.password = null; //saved in auth system (roles are in both for ease of querying person by role)
+		Logger.debug(person.toString());
+		if (create) {
+			person.accountUuid = u.uuid;
+			person.roles.add(MyUsernamePasswordAuthProvider.USER_ROLE);
+			Person.save(person);
+		} else {
+			// FIXME THIS SEEMS WRONG?:
+			Person.find(person.getUUID());
+			Person.save(person);
+
+		}
+	}
+
+	private static User saveUser(Person person) {
+		//PlayAuthenticate.storeUser(session(), authUser);
+		//User u = User.findByUsernamePasswordIdentity(user);
+		User u = User.findByEmail(person.email);
+		if (u != null) {
+			updateUserAccount(person, u);
+		} else {
+			u = setupNewUser(person, u);
+		}
+		return u;
+	}
+
+	private static void saveCareTeam(Person person, JsonNode json) {
+		person.careTeam = new ArrayList();
+		Iterator<JsonNode> teamNodes = json.findPath("careTeam").getElements();
+		while (teamNodes.hasNext()) {
+			JsonNode n = teamNodes.next();
+			Person p = Json.fromJson(n, Person.class);
+			p.id = new ObjectId(n.get("uuid").getTextValue());
+			person.careTeam.add(p);
+		}
+	}
+
+	private static void saveSite(Person person, JsonNode json) {
+		// handle referenced objects
+		if (person.site == null) { //fixme bogus site example
+			// error required field
+		} else {
+			person.site.id = new ObjectId(json.findPath("site").findPath("uuid").getTextValue());
+			models.Group.save(person.site);
+		}
 	}
 }
