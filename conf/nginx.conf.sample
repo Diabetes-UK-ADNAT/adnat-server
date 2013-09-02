@@ -34,7 +34,7 @@ http {
 	# http 8080
     server {
         listen       8080;
-        server_name  localhost emlair myadnat.co.uk api.myadnat.co.uk auth.myadnat.co.uk;
+        server_name  localhost emlair myadnat.co.uk api.myadnat.co.uk 10.0.0.2 auth.myadnat.co.uk;
 		#rewrite     ^   https://$server_name:4443$request_uri? permanent;
 
         access_log  /Users/elink/Sites/logs/host.access.log;
@@ -88,33 +88,31 @@ http {
         }
     }
 
-# REMOVE CORs for IE8 and IE9
-    # https 443
-#    server {
-#        listen       4443 ssl;
-#        server_name  api.myadnat.co.uk auth.myadnat.co.uk;
-#        access_log  /Users/elink/Sites/logs/host.access.log;
-#		keepalive_timeout    70;
-#
-#        ssl_certificate      /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.int.and.ssl.crt;
-#        ssl_certificate_key  /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.key.nopass;
-#
-#        ssl_session_timeout  5m;
-#
-#        ssl_protocols  SSLv2 SSLv3 TLSv1;
-#        ssl_ciphers  HIGH:!aNULL:!MD5;
-#        ssl_prefer_server_ciphers   on;
-#
-#        location ~ /\.ht {
-#            deny  all;
-#        }
-#	    location / {
-#		  proxy_pass              http://localhost:9000;
-#		  proxy_set_header        X-Real-IP $remote_addr;
-#		  proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-#		  proxy_set_header        Host $http_host;
-#	    }                                                                                                       
-#    }
+    server {
+        listen       4443 ssl;
+        server_name  10.0.2.2 auth.myadnat.co.uk;
+        access_log  /Users/elink/Sites/logs/host.access.log;
+		keepalive_timeout    70;
+
+        ssl_certificate      /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.int.and.ssl.crt;
+        ssl_certificate_key  /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.key.nopass;
+
+        ssl_session_timeout  5m;
+
+        ssl_protocols  SSLv2 SSLv3 TLSv1;
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers   on;
+
+        location ~ /\.ht {
+            deny  all;
+        }
+	    location / {
+		  proxy_pass              http://localhost:9000;
+		  proxy_set_header        X-Real-IP $remote_addr;
+		  proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+		  proxy_set_header        Host $http_host;
+	    }                                                                                                       
+    }
 
     # server {
      #    listen       8080;
