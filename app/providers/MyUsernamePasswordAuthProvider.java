@@ -164,6 +164,31 @@ public class MyUsernamePasswordAuthProvider
 		return SignupResult.USER_CREATED_UNVERIFIED;
 	}
 
+	public static String testpw(final MyLoginUsernamePasswordAuthUser authUser) {
+		final User u = User.findByUsernamePasswordIdentity(authUser);
+		if (u == null) {
+			return "INVALID:NOT_FOUND";
+		} else {
+			if (!u.emailValidated) {
+				return "INVALID:USER_UNVERIFIED";
+			} else {
+				for (final LinkedAccount acc : u.linkedAccounts) {
+					if (PROVIDER_KEY.equals(acc.providerKey)) {
+						if (authUser.checkPassword(acc.providerUserId, authUser.getPassword())) {
+							return "VALID";
+						} else {
+							// if you don't return here,
+							// you would allow the user to have
+							// multiple passwords defined
+							// usually we don't want this
+							return "INVALID:WRONG_PASSWORD";
+						}
+					}
+				}
+				return "INVALID:WRONG_PASSWORD";
+			}
+		}
+	}
 	public static String handleTouchLogin(final MyLoginUsernamePasswordAuthUser authUser, final String appKey) {
 		final User u = User.findByUsernamePasswordIdentity(authUser);
 		if (u == null) {

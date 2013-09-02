@@ -33,6 +33,7 @@ GET     /v1/subject         controllers.PersonController.subject()
 POST	/v1/persons         controllers.PersonController.save()
 GET     /v1/persons/:id     controllers.PersonController.getById(id: String)
 DELETE	/v1/persons/:id     controllers.PersonController.delete(id: String)
+POST    /v1/persons/testauthtxn     controllers.PersonController.testpw()
 
 
 OPTIONS /*url                   controllers.Application.options(url: String)

@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
+import models.PassTest;
 import models.Person;
 import models.auth.SecurityRole;
 import models.auth.TokenAction;
@@ -19,10 +20,28 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import static play.mvc.Controller.ctx;
 import play.mvc.Result;
+import providers.MyLoginUsernamePasswordAuthUser;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthUser;
 
 public class PersonController extends BaseController {
+
+	@BodyParser.Of(value = BodyParser.Json.class)
+	@Restrict(
+			@Group(MyUsernamePasswordAuthProvider.USER_ROLE))
+	public static Result testpw() {
+		Logger.debug("testpw");
+		JsonNode json = getJsonFromBody();
+		PassTest passTest = Json.fromJson(json, PassTest.class);
+		final MyLoginUsernamePasswordAuthUser authUser = new MyLoginUsernamePasswordAuthUser(passTest.password, passTest.email);
+		String authResult = MyUsernamePasswordAuthProvider.testpw(authUser);
+		Logger.info(authResult);
+		if (authResult.equals("VALID")) {
+			return okWithHeaders();
+		} else {
+			throw new RuntimeException(MessageFormat.format("Invalid login {0}", new Object[]{authResult}));
+		}
+	}
 
 	@BodyParser.Of(value = BodyParser.Json.class)
 	@Restrict(
@@ -156,7 +175,8 @@ public class PersonController extends BaseController {
 
 		if (u != null) {
 			if (create) {
-				throw new IllegalArgumentException( MessageFormat.format("Duplicate email address {0}", new Object[]{person.email})); }
+				throw new IllegalArgumentException(MessageFormat.format("Duplicate email address {0}", new Object[]{person.email}));
+			}
 			updateUserAccount(person, u);
 		} else {
 			u = setupNewUser(person, u);
