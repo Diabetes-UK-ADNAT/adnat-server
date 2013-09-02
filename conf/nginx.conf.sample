@@ -1,0 +1,200 @@
+
+#user  elink;
+worker_processes  1;
+
+error_log  /Users/elink/Sites/logs/error.log;
+#error_log  /Users/elink/Sites/logs/error.log  notice;
+#error_log  /Users/elink/Sites/logs/error.log  info;
+
+pid        /Users/elink/Sites/logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+    #access_log  logs/access.log  main;
+    sendfile        on;
+    #tcp_nopush     on;
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+    #gzip  on;
+
+	# # # # # # # # # # # # # # #
+	###### Virtual Servers ######
+	# # # # # # # # # # # # # # #
+
+	# http 8080
+    server {
+        listen       8080;
+        server_name  localhost emlair myadnat.co.uk api.myadnat.co.uk auth.myadnat.co.uk;
+		#rewrite     ^   https://$server_name:4443$request_uri? permanent;
+
+        access_log  /Users/elink/Sites/logs/host.access.log;
+
+        location / {
+			root /Users/elink/Sites/current;
+            index  index.html index.htm;
+        }
+
+        location ~ /\.ht {
+            deny  all;
+        }
+
+    }
+    
+    # https 443
+    server {
+        listen       4443 ssl;
+        #listen       443 ssl;
+        server_name  myadnat.co.uk touch.myadnat.co.uk;
+        access_log  /Users/elink/Sites/logs/host.access.log;
+		keepalive_timeout    70;
+
+        ssl_certificate      /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.int.and.ssl.crt;
+        ssl_certificate_key  /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.key.nopass;
+
+        ssl_session_timeout  5m;
+
+        ssl_protocols  SSLv2 SSLv3 TLSv1;
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers   on;
+
+
+	gzip on;
+	gzip_disable msie6;
+	#gzip_static on;
+	gzip_comp_level 9;
+	gzip_proxied any;
+	gzip_types text/plain text/css application/x-javascript text/xml application/xml   application/xml+rss text/javascript;
+
+	    location /api/ {
+		  rewrite  ^/api/(.*)  /$1 break;
+		  proxy_pass              http://localhost:9000;
+		  proxy_set_header        X-Real-IP $remote_addr;
+		  proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+		  proxy_set_header        Host $http_host;
+	    }                                                                                                       
+        location / {
+			root /Users/elink/Sites/current;
+            index  index.html index.htm;
+        }
+    }
+
+# REMOVE CORs for IE8 and IE9
+    # https 443
+#    server {
+#        listen       4443 ssl;
+#        server_name  api.myadnat.co.uk auth.myadnat.co.uk;
+#        access_log  /Users/elink/Sites/logs/host.access.log;
+#		keepalive_timeout    70;
+#
+#        ssl_certificate      /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.int.and.ssl.crt;
+#        ssl_certificate_key  /Users/elink/Sites/myadnat.co.uk.ssl/myadnat.co.uk.key.nopass;
+#
+#        ssl_session_timeout  5m;
+#
+#        ssl_protocols  SSLv2 SSLv3 TLSv1;
+#        ssl_ciphers  HIGH:!aNULL:!MD5;
+#        ssl_prefer_server_ciphers   on;
+#
+#        location ~ /\.ht {
+#            deny  all;
+#        }
+#	    location / {
+#		  proxy_pass              http://localhost:9000;
+#		  proxy_set_header        X-Real-IP $remote_addr;
+#		  proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+#		  proxy_set_header        Host $http_host;
+#	    }                                                                                                       
+#    }
+
+    # server {
+     #    listen       8080;
+      #   server_name  localhost emlair;
+
+        #charset koi8-r;
+
+       #  access_log  /Users/elink/Sites/logs/host.access.log;
+
+        # location / {
+		# 	root /Users/elink/Sites/current;
+         #    index  index.html index.htm;
+        # }
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        # error_page   500 502 503 504  /50x.html;
+        # location = /50x.html {
+            # root   share/nginx/html;
+        # }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           share/nginx/html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+            #deny  all;
+        #}
+    #}
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   share/nginx/html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443;
+    #    server_name  localhost;
+
+    #    ssl                  on;
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_timeout  5m;
+
+    #    ssl_protocols  SSLv2 SSLv3 TLSv1;
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers   on;
+
+    #    location / {
+    #        root   share/nginx/html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
