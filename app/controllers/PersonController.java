@@ -4,6 +4,7 @@ import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.feth.play.module.pa.PlayAuthenticate;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class PersonController extends BaseController {
 
 		saveSite(person, json);
 		saveCareTeam(person, json);
-		User u = saveUser(person);
+		User u = saveUser(person, create);
 		savePerson(person, create, u);
 
 		if (create) {
@@ -148,11 +149,14 @@ public class PersonController extends BaseController {
 		}
 	}
 
-	private static User saveUser(Person person) {
+	private static User saveUser(Person person, boolean create) {
 		//PlayAuthenticate.storeUser(session(), authUser);
 		//User u = User.findByUsernamePasswordIdentity(user);
 		User u = User.findByEmail(person.email);
+
 		if (u != null) {
+			if (create) {
+				throw new IllegalArgumentException( MessageFormat.format("Duplicate email address {0}", new Object[]{person.email})); }
 			updateUserAccount(person, u);
 		} else {
 			u = setupNewUser(person, u);
