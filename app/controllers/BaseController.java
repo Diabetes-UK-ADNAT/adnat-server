@@ -9,7 +9,7 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.libs.Json.*;
-import play.mvc.Http;
+import static play.mvc.Controller.response;
 import play.mvc.Result;
 
 public class BaseController extends Controller {
@@ -21,8 +21,15 @@ public class BaseController extends Controller {
 				"origin, Content-Type, X-Requested-With, x-requested-with, content-type, X-Auth-Token, X-App-Key");
 		response().setHeader("Access-Control-Allow-Methods",
 				"PUT, GET, POST, DELETE, OPTIONS");
+		// http://www.w3.org/TR/2008/WD-access-control-20080912/
+		
 		response().setHeader("Access-Control-Max-Age", "10");
-//		response().setHeader("Access-Control-Max-Age", "1728000");
+		//IE caches resource calls agressively, so make sure no-cache is explicit
+		response().setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		response().setHeader("Pragma", "no-cache");
+		response().setHeader("Expires", "0");
+
+		// response().setHeader("Access-Control-Max-Age", "1728000");
 		// http://stackoverflow.com/questions/7067966/how-to-allow-cors-in-express-nodejs
 	}
 
@@ -56,13 +63,13 @@ public class BaseController extends Controller {
 		Logger.debug("Subj=" + subject);
 		if (subject != null) {
 			StringBuilder sb = new StringBuilder();
-			for(String r:subject.roles) {
+			for (String r : subject.roles) {
 				sb.append(r);
 				sb.append(',');
 			}
-			Logger.debug("subject.uuid="+ subject.getUUID());
-			Logger.debug("subject.roles="+ sb.toString());
-			Logger.debug("subject.site="+ subject.site);
+			Logger.debug("subject.uuid=" + subject.getUUID());
+			Logger.debug("subject.roles=" + sb.toString());
+			Logger.debug("subject.site=" + subject.site);
 		}
 		return subject;
 	}
