@@ -88,6 +88,8 @@ public class Person extends BaseModel {
 	public static class Activity {
 
 		public Date lastAssessmentPosted;
+//		public Date lastAssessmentReviewed;
+//		public Date nextAssessmentScheduled;
 		public String lastAssessmentUuid;
 	}
 }
