@@ -39,7 +39,7 @@ public class ContactRequestController extends BaseController {
 		mail.addRecipient(Play.application().configuration().getString("adnat.email.support"));
 		mail.addFrom(Play.application().configuration().getString("adnat.email.support"));
 		Date requestDate = new Date();
-		String uri = "https://" + request().host() + "/v1/contactrequests/" + contactRequest.getUUID(); //fixme web url
+		String uri = "http://" + request().host() + "/v1/contactrequests/" + contactRequest.getUUID(); //fixme web url
 		String html = views.html.email.email_contact.render(uri, requestDate).body();
 		String txt = views.txt.email.email_contact.render(uri, requestDate).body();
 		mail.send(txt, html);

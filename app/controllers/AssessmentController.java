@@ -74,7 +74,7 @@ public class AssessmentController extends BaseController {
 	private static void sendNotification(Assessment assessment) {
 		// body is same for all so just create once 
 		Date notificationDate = new Date();
-		String uri = "https://" + request().host() + "/#/assessment/view/" + assessment.getUUID();
+		String uri = "http://" + request().host() + "/#/assessment/view/" + assessment.getUUID();
 		uri = uri.replace("api.", "");
 		String patient = assessment.person.email;
 		String html = views.html.email.email_assessment_notification.render(patient, uri, notificationDate).body();
